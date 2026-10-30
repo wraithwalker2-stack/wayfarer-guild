@@ -1,0 +1,6 @@
+.undead-sprite{background-image:url('./assets/undead-models-v1.webp')!important;background-size:500% 100%!important}
+#battlePanel[data-dungeon="sepulcher"] .iso-ground{background:linear-gradient(145deg,#69776b8c,#44465390)}
+#battlePanel[data-dungeon="sepulcher"] .iso-cell[data-height="1"] .iso-ground{background:linear-gradient(145deg,#829285a0,#55596ba0)}
+#battlePanel[data-dungeon="sepulcher"] .iso-cell[data-height="2"] .iso-ground{background:linear-gradient(145deg,#a1ac9ba8,#77778ea8)}
+#battlePanel .crypt-obstacle{filter:grayscale(.8) hue-rotate(40deg) brightness(.8) drop-shadow(0 1px 2px #0009)!important}
+.dungeonchoices{flex-wrap:wrap}

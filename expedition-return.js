@@ -1,0 +1,9 @@
+(function(){
+'use strict';
+let completed=null;
+const previousFinish=finishRun;
+finishRun=function(...args){const r=runState;if(!r)return previousFinish(...args);const road=r.roadEncounter?{...r.roadEncounter}:null,snapshot={dungeonId:r.dungeon.id,partyIds:[...r.ids],mode:r.mode||'manual'};const result=previousFinish(...args),report=document.querySelector('#run .report');if(!report)return result;report.querySelector('button')?.remove();const actions=document.createElement('div');actions.className='expedition-end-actions';if(road){completed={kind:'road',...road};actions.innerHTML='<button class="button green" onclick="continueRoadJourney()">Continue journey →</button><button class="button secondary" onclick="returnAfterExpedition()">Return to Solaris</button>';report.insertAdjacentHTML('afterbegin',`<p class="road-encounter-note">Road encounter cleared at Greenway Crossing${road.sureFooted?' · Sure Footed reduced the encounter chance to 25%':''}.</p>`)}else{completed={kind:'site',...snapshot};actions.innerHTML='<button class="button green" onclick="repeatExpedition()">Repeat expedition</button><button class="button secondary" onclick="returnAfterExpedition()">Return to Solaris</button>'}report.append(actions);return result};
+window.repeatExpedition=function(){if(completed?.kind!=='site')return;document.getElementById('run')?.classList.remove('show');wayfarerTravel.repeat(completed)};
+window.returnAfterExpedition=function(){if(!completed)return;const data=completed.kind==='road'?{dungeonId:'greenway',partyIds:completed.partyIds,mode:completed.mode}:completed;document.getElementById('run')?.classList.remove('show');wayfarerTravel.returnToCity(data)};
+window.continueRoadJourney=function(){if(completed?.kind!=='road')return;document.getElementById('run')?.classList.remove('show');wayfarerTravel.continueJourney(completed)};
+})();

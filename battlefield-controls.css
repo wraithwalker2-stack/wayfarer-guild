@@ -1,0 +1,14 @@
+#battlePanel.isometric-combat .battlegrid-wrap{max-height:65vh;min-height:300px;overflow:auto!important;overscroll-behavior:contain;cursor:grab;touch-action:pan-x pan-y}
+#battlePanel .battlegrid-wrap.camera-dragging,#battlePanel .battlegrid-wrap.camera-dragging *{cursor:grabbing!important;user-select:none!important}
+.battle-pan-controls{display:inline-flex;flex-wrap:wrap;gap:4px}.battle-pan-controls .button{padding:6px 10px}
+.deployment-panel{position:relative;z-index:2;margin:12px;padding:15px;background:var(--panel);border:1px solid var(--gold);border-radius:8px;font-size:12px}.deployment-panel p{color:var(--muted);line-height:1.5}.deployment-panel .button{margin:4px}.deployment-panel h3{margin:0 0 8px}
+#battlePanel .deployment-tile .iso-ground{background:#55c6c298!important;filter:drop-shadow(0 0 2px #a6fff0)}
+#battlePanel .deployment-selected .iso-ground{background:#f3d277c9!important;filter:drop-shadow(0 0 5px #ffe09a)}
+@media(max-width:650px){#battlePanel.isometric-combat .battlegrid-wrap{min-height:260px;max-height:58vh}}
+/* The field owns the full panel width; both scrollbars sit on its outer edges. */
+#battlePanel.isometric-combat .battlebody{display:flex!important;flex-direction:column!important;align-items:stretch!important;min-width:0;width:100%;box-sizing:border-box}
+#battlePanel.isometric-combat .battlegrid-wrap{display:block!important;flex:none!important;align-self:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box;overflow:scroll!important;scrollbar-gutter:stable;direction:ltr}
+#battlePanel.isometric-combat .battleinfo{width:100%!important;max-width:none!important;min-width:0;box-sizing:border-box;border-left:0;border-top:1px solid var(--line);padding:14px!important}
+#battlePanel .battlehead,#battlePanel .battlebody,#battlePanel .party-presence{position:relative;z-index:1}
+#battlePanel .battle-toolbar{position:sticky;top:0;z-index:4;display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:12px;background:var(--panel);border-bottom:1px solid var(--line);box-shadow:0 3px 8px #0003}
+.battle-toolbar strong{font-size:12px;margin-right:8px;color:var(--gold)}.battle-toolbar .button{padding:7px 10px;font-size:11px}.battle-toolbar-pan{display:inline-flex;gap:4px;flex-wrap:wrap}

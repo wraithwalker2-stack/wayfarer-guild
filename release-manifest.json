@@ -1,0 +1,56 @@
+{
+  "release": "0.6.7-alpha",
+  "generatedAt": "2026-10-30T21:23:24.669Z",
+  "files": 142,
+  "bytes": 79442455,
+  "largest": [
+    {
+      "file": "assets/aureline-continent-v2.png",
+      "bytes": 3620028
+    },
+    {
+      "file": "assets/aureline-continent-v3.png",
+      "bytes": 3620028
+    },
+    {
+      "file": "assets/codex-events-atlas-v1.png",
+      "bytes": 3156596
+    },
+    {
+      "file": "assets/codex-people-atlas-v1.png",
+      "bytes": 3073859
+    },
+    {
+      "file": "assets/codex-locations-atlas-v1.png",
+      "bytes": 2856863
+    },
+    {
+      "file": "assets/mosslight-v2.webp",
+      "bytes": 2598864
+    },
+    {
+      "file": "assets/moss-ruins.webp",
+      "bytes": 2560032
+    },
+    {
+      "file": "assets/moss-terraces.webp",
+      "bytes": 2504966
+    },
+    {
+      "file": "assets/moss-stream.webp",
+      "bytes": 2485718
+    },
+    {
+      "file": "assets/moss-crystals.webp",
+      "bytes": 2452040
+    },
+    {
+      "file": "assets/ashen-archives.webp",
+      "bytes": 2422834
+    },
+    {
+      "file": "assets/ashen-v2.webp",
+      "bytes": 2408690
+    }
+  ]
+}

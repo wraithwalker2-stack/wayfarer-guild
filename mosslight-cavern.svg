@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 760" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="cave" x2="0" y2="1"><stop stop-color="#101914"/><stop offset=".32" stop-color="#253328"/><stop offset=".72" stop-color="#27372e"/><stop offset="1" stop-color="#111e1e"/></linearGradient>
+  <linearGradient id="rock" x2=".25" y2="1"><stop stop-color="#536149"/><stop offset=".45" stop-color="#354638"/><stop offset="1" stop-color="#1b2b29"/></linearGradient>
+  <linearGradient id="water" x2="0" y2="1"><stop stop-color="#47c9b5" stop-opacity=".72"/><stop offset=".4" stop-color="#1e837f" stop-opacity=".84"/><stop offset="1" stop-color="#103e49" stop-opacity=".9"/></linearGradient>
+  <radialGradient id="mossGlow"><stop stop-color="#a6e77b" stop-opacity=".62"/><stop offset="1" stop-color="#67a955" stop-opacity="0"/></radialGradient>
+  <radialGradient id="fungusGlow"><stop stop-color="#d893ff" stop-opacity=".7"/><stop offset="1" stop-color="#bd70e8" stop-opacity="0"/></radialGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <linearGradient id="cap" x2=".25" y2="1"><stop stop-color="#deb2dc"/><stop offset=".35" stop-color="#a874a9"/><stop offset="1" stop-color="#57465e"/></linearGradient>
+  <linearGradient id="stem" x2="1" y2="0"><stop stop-color="#817f68"/><stop offset=".45" stop-color="#e2d9b5"/><stop offset="1" stop-color="#8a856e"/></linearGradient>
+  <filter id="rockGrain" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".055" numOctaves="3" seed="4" result="n"/><feColorMatrix in="n" type="saturate" values="0" result="gray"/><feComponentTransfer in="gray"><feFuncA type="table" tableValues="0 .2"/></feComponentTransfer><feBlend in="SourceGraphic" in2="gray" mode="soft-light"/></filter>
+  <pattern id="stoneTiles" width="184" height="126" patternUnits="userSpaceOnUse">
+    <path d="M-8 36 48 22 103 31 158 12 194 30M47 23 38 80 82 126M103 31l8 46-29 49m76-154 8 46-45 31 18 53M-6 99l43-19 71-3 52-31 37 5" fill="none" stroke="#a9c191" stroke-opacity=".12" stroke-width="3"/>
+    <path d="m12 52 18-8m78 14 14-5m-78 52 18-8m68-61 17-5" stroke="#c4d8a3" stroke-opacity=".09" stroke-width="3"/>
+    <ellipse cx="26" cy="64" rx="20" ry="9" fill="#8aa66a" opacity=".1"/><ellipse cx="139" cy="93" rx="24" ry="11" fill="#769662" opacity=".12"/><path d="M4 116q24-16 45-5m79-80q19-12 35-8" fill="none" stroke="#9cbb75" stroke-opacity=".15" stroke-width="8"/>
+  </pattern>
+  <g id="mushroom"><path d="M0-3q-3 12-2 27l-5 5q11 5 21 0l-7-7Q7 7 10-1Z" fill="url(#stem)"/><path d="M-23 1Q-21-12-8-18Q1-24 12-17Q23-11 25 2Q16 9 4 7Q-9 10-23 1Z" fill="url(#cap)" stroke="#d5aed7" stroke-opacity=".72" stroke-width="2"/><path d="M-18 3q19 11 39-1M-10 6l5 8m5-7v10m8-11 5 7" fill="none" stroke="#efe0d2" stroke-opacity=".5" stroke-width="1.4"/><g fill="#f1d7ed" opacity=".65"><circle cx="-10" cy="-10" r="1.6"/><circle cx="3" cy="-15" r="1.2"/><circle cx="14" cy="-8" r="1.5"/></g></g>
+  <g id="mintMushroom"><path d="M0-2q-2 9-2 23l-4 4q8 4 17 0l-6-6Q6 7 8-1Z" fill="url(#stem)"/><path d="M-18 1Q-15-11-5-15Q4-20 13-13Q19-8 20 2Q10 8 1 6Q-9 9-18 1Z" fill="#88c99d" stroke="#c7f2c7" stroke-opacity=".8" stroke-width="2"/><path d="M-14 3q15 8 31-1m-17 4 4 8m5-10 4 7" fill="none" stroke="#e8efcf" stroke-opacity=".55" stroke-width="1.2"/></g>
+</defs>
+<rect width="1280" height="760" fill="url(#cave)"/>
+<rect y="90" width="1280" height="670" fill="url(#stoneTiles)" opacity=".92" filter="url(#rockGrain)"/>
+<!-- Cave roof and mossy ledges frame a broad open combat floor. -->
+<path d="M0 0H1280V111Q1190 145 1117 112T966 116Q878 151 793 112T638 121Q520 157 436 112T269 124Q168 151 0 111Z" fill="#101914"/>
+<path d="M0 105Q160 140 283 111T510 117Q647 151 770 115T1000 114Q1140 145 1280 105V154Q1130 172 1007 143T769 149Q630 177 493 145T260 151Q135 171 0 145Z" fill="url(#rock)" opacity=".92"/>
+<path d="M0 137Q135 154 267 137T502 138Q650 162 775 137T1006 140Q1154 162 1280 132" fill="none" stroke="#91aa69" stroke-opacity=".52" stroke-width="9"/>
+<path d="M32 151q18-21 36-4m79 2q24-26 42-6m238 9q24-22 45-5m167 4q18-24 38-7m250 7q25-24 45-5m207 1q19-19 39-3" fill="none" stroke="#adc87d" stroke-opacity=".52" stroke-width="8" stroke-linecap="round"/>
+<path d="M0 660Q130 621 244 662T475 665Q614 628 738 662T986 664Q1120 624 1280 656V760H0Z" fill="#142421" opacity=".94"/>
+<!-- Underground stream runs across the back of the cavern, independent from grid coordinates. -->
+<path d="M-30 690Q106 642 230 688T480 692Q620 650 753 690T1000 687Q1146 644 1310 687V760H-30Z" fill="url(#water)"/>
+<path d="M-10 688Q113 650 236 691T482 694Q619 658 752 692T1001 690Q1154 651 1296 690" fill="none" stroke="#9cfff0" stroke-opacity=".62" stroke-width="7"/>
+<path d="M12 718Q125 680 233 719T481 720Q619 687 748 719T998 719Q1153 680 1280 716" fill="none" stroke="#65e4d0" stroke-opacity=".5" stroke-width="4"/>
+<path d="M72 703q31-10 63-2m128 25q29-11 56-4m192-20q28-10 57-3m181 25q35-13 66-5m154-17q29-10 56-3" fill="none" stroke="#d7fff2" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="210" cy="705" rx="250" ry="85" fill="#4cc9b7" opacity=".13" filter="url(#glow)"/><ellipse cx="1047" cy="701" rx="300" ry="85" fill="#57b7d1" opacity=".14" filter="url(#glow)"/>
+<!-- Moss and fungus clusters grow along the cavern edges. -->
+<ellipse cx="97" cy="479" rx="175" ry="145" fill="url(#mossGlow)"/><ellipse cx="1187" cy="448" rx="168" ry="150" fill="url(#mossGlow)"/>
+<path d="M0 587Q82 538 161 573T300 566L316 660H0ZM982 610Q1098 535 1177 578T1280 560V665H970Z" fill="url(#rock)"/>
+<path d="M11 584Q88 539 165 576T297 569M985 611Q1097 540 1178 580T1275 562" fill="none" stroke="#91b668" stroke-opacity=".7" stroke-width="14"/>
+<ellipse cx="138" cy="507" rx="118" ry="109" fill="url(#fungusGlow)"/><ellipse cx="1110" cy="490" rx="136" ry="119" fill="url(#fungusGlow)"/>
+<g opacity=".97">
+ <use href="#mushroom" x="75" y="533"/><use href="#mintMushroom" x="113" y="548" transform="scale(.8)"/><use href="#mushroom" x="157" y="524" transform="scale(1.12)"/><use href="#mintMushroom" x="200" y="551"/><use href="#mushroom" x="239" y="537" transform="scale(.72)"/>
+ <use href="#mintMushroom" x="1013" y="545" transform="scale(.83)"/><use href="#mushroom" x="1057" y="527" transform="scale(1.08)"/><use href="#mintMushroom" x="1101" y="552"/><use href="#mushroom" x="1144" y="523" transform="scale(.8)"/><use href="#mintMushroom" x="1190" y="544" transform="scale(.92)"/>
+</g>
+<g fill="#baffd4" opacity=".7"><circle cx="60" cy="598" r="3"/><circle cx="266" cy="600" r="4"/><circle cx="979" cy="615" r="3"/><circle cx="1222" cy="591" r="4"/><circle cx="341" cy="202" r="2"/><circle cx="926" cy="245" r="2"/></g>
+</svg>

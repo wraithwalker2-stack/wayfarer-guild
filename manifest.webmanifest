@@ -1,0 +1,12 @@
+{
+  "name": "Wayfarer Guild",
+  "short_name": "Wayfarer",
+  "description": "Build a guild, develop adventurers, and lead tactical expeditions across Lumara.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#151914",
+  "theme_color": "#252923",
+  "icons": [
+    { "src": "./guild-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,8 @@
+#battlePanel.isometric-combat.model-terrain-combat .iso-cell>i{height:7px!important;border-radius:4px!important;box-shadow:0 0 0 1px #fff,0 0 7px #ff655bcc!important;background:linear-gradient(#ffb3a5,#ff443e)!important;z-index:7!important;pointer-events:none}
+#battlePanel.isometric-combat.model-terrain-combat .iso-cell.ally>i{background:linear-gradient(#beffae,#40ed69)!important;box-shadow:0 0 0 1px #eaffdf,0 0 7px #4fff7dcc!important}
+#battlePanel.isometric-combat.model-terrain-combat .iso-cell>.health-bar-track{position:absolute!important;display:block!important;width:calc(56px * var(--iso-scale,1))!important;height:7px!important;left:calc(20px * var(--iso-scale,1))!important;bottom:0!important;background:#111820ef;border:1px solid #d5e2e9;border-radius:4px;box-sizing:border-box;z-index:6;pointer-events:none}
+#battlePanel.isometric-combat .iso-cell small{color:#fff!important;background:#111c!important;padding:1px 3px;border-radius:3px;text-shadow:0 1px 2px #000;z-index:8!important}
+.battle-floating-number{position:fixed;z-index:10000;pointer-events:none;font:bold 26px/1 'DM Sans',sans-serif;text-shadow:-1px -1px 1px #111,1px -1px 1px #111,-1px 1px 1px #111,1px 2px 2px #111,0 0 6px #000;transform:translateX(-50%);animation:battle-number-rise 1.4s ease-out forwards;white-space:nowrap}
+.floating-damage{color:#ff9987}.floating-heal{color:#85ffb0}
+@keyframes battle-number-rise{0%{opacity:1;transform:translate(-50%,8px) scale(.85)}15%{opacity:1;transform:translate(-50%,-4px) scale(1.15)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-64px) scale(1)}}
+@media(prefers-reduced-motion:reduce){.battle-floating-number{animation:battle-number-still 1.4s linear forwards}@keyframes battle-number-still{0%,75%{opacity:1}100%{opacity:0}}}

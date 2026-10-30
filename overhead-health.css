@@ -1,0 +1,7 @@
+#battlePanel.overhead-vitals .iso-cell>i,#battlePanel.overhead-vitals .iso-cell>.health-bar-track,#battlePanel.overhead-vitals .iso-cell>small{display:none!important}
+.overhead-vitals-layer{position:absolute;inset:0;z-index:1000;pointer-events:none!important;overflow:visible}
+.overhead-unit-vitals{position:absolute;transform:translateX(-50%);pointer-events:none;text-align:center}
+.overhead-unit-vitals>span{display:inline-block;color:white;background:#0c141ee8;padding:2px 4px;border-radius:3px;font:bold 10px/1.2 'DM Sans',sans-serif;text-shadow:0 1px 2px #000;white-space:nowrap;margin-bottom:3px}
+.overhead-hp-track{height:7px;border:1px solid #f2fff3;border-radius:4px;background:#111820;overflow:hidden;box-shadow:0 1px 3px #000b}
+.overhead-hp-track>i{display:block;height:100%;background:linear-gradient(#b7ffa8,#36ee68)}
+.enemy-vitals .overhead-hp-track{border-color:#ffe6de}.enemy-vitals .overhead-hp-track>i{background:linear-gradient(#ffb29d,#ff453e)}

@@ -1,0 +1,4 @@
+// Add a visible heavy chest option to existing shop stock, then each paid restock.
+const heavyChestMarket=ensureMarketStock;ensureMarketStock=function(...args){const s=window.wayfarerGearState,fresh=!s.market?.length,result=heavyChestMarket(...args);if(fresh||!s.heavyChestIntroduced){if(!s.market.map(gearItem).some(i=>i?.slot==='chest'&&armorWeight(i)==='heavy')){const recipes=FORGE_RECIPES.filter(r=>r.slot==='chest'&&/plate/i.test(r.name)),recipe=recipes[Math.floor(Math.random()*recipes.length)];if(recipe){const item=makeForgeItem(recipe,forgeLevel());s.items.push(item);s.market.push(item.id)}}s.heavyChestIntroduced=true;gearPersist()}return result};
+const heavyChestRefresh=refreshMarket;refreshMarket=function(...args){if(gold>=20)window.wayfarerGearState.heavyChestIntroduced=false;return heavyChestRefresh(...args)};
+ensureMarketStock();save();renderMarketPage();renderForgePage();
