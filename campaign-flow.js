@@ -14,7 +14,6 @@ function moveMarker(id,notify=true){const target=markerTarget(id),map=stage();if
 function installMapTravel(){const map=stage();if(!map||map.dataset.partyTravelInstalled)return;map.dataset.partyTravelInstalled='1';syncRoutes();moveMarker(currentLocation(),false);const solaris=map.querySelector('[data-location="solaris"]');if(solaris)solaris.onclick=()=>{moveMarker('solaris');const card=document.getElementById('routeCard');if(card)card.insertAdjacentHTML('afterbegin','<div class="location-arrival">Your party is in Solaris. Use the location button below to enter the capital.</div>')};map.querySelectorAll('[data-location]').forEach(pin=>{if(pin.dataset.location==='solaris')return;const prior=pin.onclick;pin.onclick=e=>{const id=pin.dataset.location;if(!routeUnlocked(id))return;moveMarker(id);if(typeof prior==='function')prior.call(pin,e)}});map.querySelectorAll('[data-new-place]').forEach(pin=>pin.onclick=()=>moveMarker(pin.dataset.newPlace))}
 const previousOpen=window.openWorldMap;window.openWorldMap=function(...args){const result=previousOpen?.apply(this,args);syncGuildOperations();syncRoutes();installMapTravel();moveMarker(currentLocation(),false);return result};
 document.addEventListener('click',()=>setTimeout(()=>{syncGuildOperations();syncRoutes()},0));
-new MutationObserver(()=>syncGuildOperations()).observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});
 syncGuildOperations();syncRoutes();installMapTravel();
 })();
 
