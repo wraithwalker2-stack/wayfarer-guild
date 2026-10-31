@@ -30,6 +30,19 @@ function choose(id){const data=story(),options=data.step===0?firstChoices:finalC
 function finish(){const data=story();if(data.choices.length<2)return;const p=profile();for(const choice of data.choices)p.traits[choice.trait]=(p.traits[choice.trait]||0)+1;p.decisions.push({contract:'family-call',choices:data.choices.map(x=>x.id),at:new Date().toISOString()});localStorage.setItem(PROFILE_KEY,JSON.stringify(p));const f=founder(),last=data.choices[1];if(window.completeNarrativeContract?.('family-call',{title:title(),issuer:`${f.house} family council`,resolution:last.resolution,choices:data.choices.map(x=>x.result)})){localStorage.removeItem(STORY_KEY);window.toast?.(`${last.trait} has been added to your leadership profile.`)}}
 function renderNarrative(){const root=document.getElementById('contractsContent');if(!root)return;const data=story(),f=founder(),scene=sceneCopy(data),options=data.step===0?firstChoices:data.step===1?finalChoices:[],p=profile();root.innerHTML=`<section class="narrative-contract"><header class="narrative-banner"><div><small>${scene.eyebrow}</small><h2>${scene.heading}</h2><p>${f.name} · ${f.guild}</p></div></header><div class="narrative-body"><div class="narrative-progress">${[0,1,2].map((_,i)=>`<i class="${i<=data.step?'done':''}"></i>`).join('')}</div><article class="narrative-scene"><h3>${scene.heading}</h3><p>${scene.copy}</p></article>${options.length?`<div class="narrative-choices">${options.map(x=>`<button class="narrative-choice" onclick="chooseFamilyStory('${x.id}')"><b>${x.title}</b><small>${x.copy}</small><em>Shapes profile: ${x.trait}</em></button>`).join('')}</div>`:`<div class="narrative-profile-preview"><b>Your first leadership profile</b><div class="player-profile-chips">${data.choices.map(x=>`<span>${x.trait}</span>`).join('')}</div><p>${data.choices.map(x=>x.result).join(' ')}</p></div>`}<div class="narrative-actions"><button class="button secondary" onclick="showContractsPage()">Return to contracts</button>${data.step>=2?'<button class="button green" onclick="finishFamilyStory()">Record this resolution</button>':''}</div></div></section>`;window.scrollTo({top:0,behavior:'smooth'})}
 window.beginNarrativeContract=function(id){if(id==='family-call')renderNarrative()};window.chooseFamilyStory=choose;window.finishFamilyStory=finish;
-const observer=new MutationObserver(decorate);observer.observe(document.body,{subtree:true,childList:true});decorate();
+const originalShowContracts=window.showContractsPage;
+if(typeof originalShowContracts==='function'){
+  window.showContractsPage=function(){
+    const result=originalShowContracts.apply(this,arguments);
+    requestAnimationFrame(decorate);
+    return result;
+  };
+}
+document.addEventListener('click',function(event){
+  if(event.target.closest('[data-page="contracts"], [onclick*="showContractsPage"]')){
+    requestAnimationFrame(decorate);
+  }
+});
+decorate();
 })();
 
