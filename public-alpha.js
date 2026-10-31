@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  const RELEASE = Object.freeze({
+  const RELEASE = window.Wayfarer?.release || Object.freeze({
     name: 'Wayfarer Guild',
-    version: '0.6.7-alpha',
+    version: '0.7.0-alpha',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];

@@ -1,8 +1,8 @@
 {
-  "release": "0.6.7-alpha",
-  "generatedAt": "2026-10-30T21:23:24.669Z",
-  "files": 142,
-  "bytes": 79442455,
+  "release": "0.7.0-alpha",
+  "generatedAt": "2026-10-31T04:52:36.365Z",
+  "files": 147,
+  "bytes": 79465819,
   "largest": [
     {
       "file": "assets/aureline-continent-v2.png",
