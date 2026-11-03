@@ -1,8 +1,8 @@
 {
-  "release": "0.7.1-alpha",
-  "generatedAt": "2026-11-03T06:40:57.904Z",
-  "files": 149,
-  "bytes": 79486876,
+  "release": "0.7.2-alpha",
+  "generatedAt": "2026-11-03T06:48:21.706Z",
+  "files": 150,
+  "bytes": 82637878,
   "largest": [
     {
       "file": "assets/aureline-continent-v2.png",
@@ -15,6 +15,10 @@
     {
       "file": "assets/codex-events-atlas-v1.png",
       "bytes": 3156596
+    },
+    {
+      "file": "assets/faction-emblems-v1.png",
+      "bytes": 3149985
     },
     {
       "file": "assets/codex-people-atlas-v1.png",
@@ -47,10 +51,6 @@
     {
       "file": "assets/ashen-archives.webp",
       "bytes": 2422834
-    },
-    {
-      "file": "assets/ashen-v2.webp",
-      "bytes": 2408690
     }
   ]
 }

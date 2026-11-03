@@ -6,9 +6,9 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-    version: '0.7.1-alpha',
+    version: '0.7.2-alpha',
     saveFormat: 1,
-    build: 'faction-codex'
+    build: 'faction-art'
   });
 
   function read(key, fallback = null) {
