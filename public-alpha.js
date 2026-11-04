@@ -3,7 +3,7 @@
 
   const RELEASE = window.Wayfarer?.release || Object.freeze({
     name: 'Wayfarer Guild',
-    version: '0.7.8-alpha',
+    version: '0.7.9-alpha',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];
@@ -128,3 +128,4 @@
   window.WAYFARER_RELEASE = RELEASE;
   installReleaseTools();
 })();
+
