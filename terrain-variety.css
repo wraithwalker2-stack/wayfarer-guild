@@ -1,0 +1,15 @@
+/* Painterly terrain atlas: four deterministic variants per biome instead of one repeated floor tile. */
+#battlePanel.authored-room .scenery-tile:not(.terrain-water):not(.terrain-hazard) .iso-ground{background-color:#435447!important;background-image:url('./assets/tactical-floor-atlas-v2.jpg')!important;background-size:400% 400%!important;background-position:var(--floor-x,33.333%) var(--floor-y,33.333%)!important;background-repeat:no-repeat!important;background-blend-mode:normal!important;image-rendering:auto!important;filter:brightness(var(--stone-shade,1)) saturate(.94) contrast(.98)!important}
+#battlePanel.authored-room[data-dungeon="greenway"] .scenery-tile:not(.terrain-water):not(.terrain-hazard) .iso-ground{background-color:#546d3c!important}
+#battlePanel.authored-room[data-dungeon="mosslight"] .scenery-tile:not(.terrain-water):not(.terrain-hazard) .iso-ground{background-color:#344c3b!important}
+#battlePanel.authored-room[data-dungeon="ashen"] .scenery-tile:not(.terrain-water):not(.terrain-hazard) .iso-ground{background-color:#403a3a!important}
+#battlePanel.authored-room[data-dungeon="sepulcher"] .scenery-tile:not(.terrain-water):not(.terrain-hazard) .iso-ground{background-color:#5b6260!important}
+
+/* Realistic depth in the base atlas, with restrained moving current and reflections above it. */
+#battlePanel.authored-room .scenery-tile.terrain-water .iso-ground{overflow:hidden!important;isolation:isolate;background-color:#285f63!important;background-image:url('./assets/tactical-water-atlas-v2.jpg')!important;background-size:400% 400%!important;background-position:var(--water-x,33.333%) var(--water-y,33.333%)!important;background-repeat:no-repeat!important;background-blend-mode:normal!important;filter:brightness(var(--stone-shade,1)) saturate(1.04) contrast(1.02)!important}
+#battlePanel.authored-room .scenery-tile.terrain-water .iso-ground::before{content:'';position:absolute;inset:-55%;background:repeating-linear-gradient(118deg,transparent 0 17%,#d9ffff4d 18% 19.5%,transparent 21% 36%),linear-gradient(96deg,transparent 20%,#ffffff28 45%,transparent 70%);background-size:140% 90%,180% 100%;mix-blend-mode:screen;opacity:.42;animation:tactical-water-flow 4.8s linear infinite;animation-delay:var(--water-phase,0s);pointer-events:none}
+#battlePanel.authored-room .scenery-tile.terrain-water[data-water-edge="true"] .iso-ground{box-shadow:inset 0 0 0 2px #d7ead15e,inset 0 0 12px #122d2a99!important}
+#battlePanel.authored-room .scenery-tile.terrain-water .terrain-marker{display:none!important}
+@keyframes tactical-water-flow{0%{transform:translate3d(-7%,-3%,0)}50%{transform:translate3d(5%,4%,0)}100%{transform:translate3d(17%,11%,0)}}
+@media(prefers-reduced-motion:reduce){#battlePanel.authored-room .scenery-tile.terrain-water .iso-ground::before{animation:none;transform:translate3d(2%,1%,0)}}
+
