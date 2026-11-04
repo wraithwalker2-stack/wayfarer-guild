@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.7.16-class-change-1';
+const CACHE='wayfarer-public-alpha-0.7.17-class-change-2';
 const SHELL=['./','./index.html','./wayfarer-core.js','./public-alpha.css','./public-alpha.js','./guild-mark.svg','./manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));

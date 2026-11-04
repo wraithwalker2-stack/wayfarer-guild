@@ -34,17 +34,21 @@ window.setCharacterJob=function(id,job){
  if(changing)return;
  const hero=heroes.find(character=>character.id===id);if(!hero||!hero.unlockedJobs.includes(job))return toast('That job is not unlocked yet.');
  if(runState?.battle)return toast('Wait until the battle ends to change jobs.');
+ if(typeof available==='function'&&!available(hero))return toast('Change jobs when this adventurer is available at the guild.');
  if(hero.currentJob===job)return;
  changing=true;const page=heroSheetPage||'overview',snapshot=clone(hero),inventory=[...(window.wayfarerGearState?.inventory||[])],previous={...(hero.equipment||{})};
  try{
    hero.currentJob=job;hero.baseClass=jobUnlocks[job]||job;hero.evolved=!!jobUnlocks[job];if(hero.subJob===job||!hero.jobSkills?.[job]?.length)hero.subJob='';
   syncJobStats(hero,true);stableAutoEquip(hero);
   const changes=Object.keys(gearSlotLabels).filter(slot=>previous[slot]!==hero.equipment?.[slot]).map(slot=>({slot:gearSlotLabels[slot],before:gearItem(previous[slot])?.name||'Empty',after:gearItem(hero.equipment?.[slot])?.name||'Empty'}));
-  save();renderAll();openHero(id,page);if(changes.length)showJobGearNotice(hero,changes);toast(`${hero.name} changed jobs to ${job}.`);
+   if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();
+   if(typeof document!=='undefined')document.getElementById('heroModalBack')?.classList.remove('open');
+   if(typeof refreshCharacterPanels==='function')refreshCharacterPanels();else if(typeof renderRoster==='function')renderRoster();
+   if(changes.length)showJobGearNotice(hero,changes);toast(`${hero.name} changed jobs to ${job}. Reopen the record to review the new loadout.`);
  }catch(error){
-  for(const key of Object.keys(hero))delete hero[key];Object.assign(hero,snapshot);window.wayfarerGearState.inventory=inventory;console.error('Job change recovered safely',error);save();renderAll();openHero(id,page);toast('The job change could not be completed safely.');
+   for(const key of Object.keys(hero))delete hero[key];Object.assign(hero,snapshot);window.wayfarerGearState.inventory=inventory;console.error('Job change recovered safely',error);if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();toast('The job change could not be completed safely.');
  }finally{changing=false}
 };
-window.WayfarerClassChange=Object.freeze({version:'1.0.0',stableAutoEquip});
+window.WayfarerClassChange=Object.freeze({version:'1.1.0',stableAutoEquip});
 })();
 
