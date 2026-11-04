@@ -1,3 +1,4 @@
+#battlePanel,#battlePanel .battlegrid-wrap,#battlePanel .battlegrid,#battlePanel .battleinfo{overflow-anchor:none}
 /* Authoritative tactical presentation: clear cliffs, stable camera, and unit-anchored orders. */
 #battlePanel.combat-v3 .battlegrid-wrap{position:relative;overflow:auto!important;scrollbar-gutter:stable both-edges;overscroll-behavior:contain;overflow-anchor:none}
 #battlePanel.combat-v3 .battlegrid{overflow-anchor:none}
