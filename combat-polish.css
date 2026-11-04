@@ -1,0 +1,17 @@
+#battlePanel.combat-polish{position:relative;isolation:isolate;transition:filter .16s ease,box-shadow .16s ease}
+#battlePanel.combat-polish::after{content:"";position:absolute;inset:0;z-index:30;border-radius:inherit;pointer-events:none;opacity:0;background:transparent}
+#battlePanel.combat-fx-hit{animation:combat-panel-impact .2s ease-out}
+#battlePanel.combat-fx-hit::after{animation:combat-red-flash .32s ease-out;background:radial-gradient(circle at center,transparent 35%,rgba(158,41,34,.38))}
+#battlePanel.combat-fx-heal::after{animation:combat-green-flash .5s ease-out;background:radial-gradient(circle at center,rgba(100,220,142,.18),transparent 68%)}
+#battlePanel.combat-fx-ability::after{animation:combat-gold-flash .48s ease-out;background:radial-gradient(circle at center,rgba(236,193,92,.2),transparent 65%)}
+#battlePanel.combat-fx-win{box-shadow:0 0 0 1px rgba(255,224,145,.62),0 0 38px rgba(220,174,71,.36)}
+#battlePanel.combat-fx-win::after{animation:combat-gold-flash .52s ease-out;background:linear-gradient(115deg,transparent,rgba(255,228,153,.25),transparent)}
+#battlePanel.combat-polish .battlecell.current-actor,#battlePanel.combat-polish .iso-cell.current-actor{filter:brightness(1.18) saturate(1.12);z-index:12!important}
+#battlePanel.combat-polish .iso-cell.current-actor::after{content:"";position:absolute;inset:8%;border:2px solid rgba(255,224,145,.9);border-radius:50%;box-shadow:0 0 13px rgba(255,210,100,.72);animation:current-actor-pulse 1.5s ease-in-out infinite;pointer-events:none}
+#battlePanel.combat-polish .battle-floating-number{letter-spacing:.02em}
+@keyframes combat-panel-impact{0%,100%{transform:translate(0)}30%{transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}}
+@keyframes combat-red-flash{0%{opacity:.8}100%{opacity:0}}
+@keyframes combat-green-flash{0%{opacity:.86}100%{opacity:0}}
+@keyframes combat-gold-flash{0%{opacity:.9}100%{opacity:0}}
+@keyframes current-actor-pulse{0%,100%{opacity:.42;transform:scale(.9)}50%{opacity:.95;transform:scale(1.08)}}
+@media(prefers-reduced-motion:reduce){#battlePanel.combat-fx-hit{animation:none}#battlePanel.combat-fx-hit::after,#battlePanel.combat-fx-heal::after,#battlePanel.combat-fx-ability::after,#battlePanel.combat-fx-win::after{animation:none;opacity:.12}#battlePanel.combat-polish .iso-cell.current-actor::after{animation:none;opacity:.7}}
