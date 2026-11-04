@@ -1,0 +1,5 @@
+#battlePanel.expanded-battlefield .battlegrid-wrap{min-height:600px;max-height:78vh;overflow:auto!important;scrollbar-gutter:stable both-edges}
+#battlePanel.expanded-battlefield .battlegrid{min-width:1260px!important}
+#battlePanel.expanded-battlefield .terrain-guide::after{content:'Expanded 20 × 11 battlefield · 220 possible positions';display:block;margin-top:8px;color:#d6bd7b;font:9px 'DM Mono';letter-spacing:.8px}
+@media(max-width:900px){#battlePanel.expanded-battlefield .battlegrid-wrap{min-height:500px}#battlePanel.expanded-battlefield .battlegrid{min-width:1120px!important}}
+

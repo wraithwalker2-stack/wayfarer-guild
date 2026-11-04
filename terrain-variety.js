@@ -23,6 +23,15 @@
    cell.style.setProperty('--water-y',atlasPosition(row));
    cell.style.setProperty('--water-phase',`${-((x*.41+y*.67+variant*.23)%4).toFixed(2)}s`);
    cell.dataset.floorVariant=String(variant+1);
+   cell.dataset.terrainArt='v2';
+   const ground=cell.querySelector('.iso-ground');
+   if(ground&&!cell.classList.contains('terrain-hazard')){
+    const water=cell.classList.contains('terrain-water');
+    ground.style.setProperty('background-image',`url('./assets/${water?'tactical-water-atlas-v2.jpg':'tactical-floor-atlas-v2.jpg'}')`,'important');
+    ground.style.setProperty('background-size','400% 400%','important');
+    ground.style.setProperty('background-position',`${atlasPosition(variant)} ${atlasPosition(row)}`,'important');
+    ground.style.setProperty('background-repeat','no-repeat','important');
+   }
   });
   const cells=[...grid.children];
   [...grid.querySelectorAll('.scenery-tile.terrain-water')].forEach(cell=>{
