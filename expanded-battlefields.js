@@ -9,7 +9,15 @@ const layouts={
  causeway:{contains:(x,y)=>y>=1&&y<=9&&(x<=7||x>=12||(y>=4&&y<=6)),height:(x,y)=>x>=14?1:0,props:[[4,2,'root-rock'],[15,8,'fallen-root'],[10,5,'mossy-stone']]},
  courtyard:{contains:(x,y)=>x<=19&&y<=10&&!(x>=8&&x<=12&&y>=4&&y<=6),height:(x,y)=>x>=16?1:0,props:[[5,5,'root-rock'],[15,5,'fallen-root'],[10,2,'mossy-stone']]},
  throne:{contains:(x,y)=>x>=1&&x<=18&&y>=1&&y<=9&&!((x===1||x===18)&&(y===1||y===9)),height:(x,y)=>x>=16?2:x>=13?1:0,props:[[8,2,'ruin-stone'],[8,8,'ruin-stone'],[14,5,'rune-pillar']]},
- greenway:{contains:(x,y)=>x>=0&&x<=19&&y>=1&&y<=9&&!((x===0||x===19)&&(y===1||y===9)),height:(x,y)=>(x>=16&&y<=3)||(x>=17&&y>=7)?1:0,props:[[7,2,'fallen-root'],[10,8,'root-rock'],[14,4,'fallen-root'],[16,7,'root-rock']]}
+ greenway:{
+  contains:(x,y)=>x>=0&&x<=19&&y>=1&&y<=9&&!((x===0||x===19)&&(y===1||y===9))&&!((x===10||x===11)&&![4,5,6].includes(y)),
+  height:(x,y)=>{
+   if(x>=18)return 3;if(x>=16)return 2;if(x>=13)return 1;
+   if(x>=5&&x<=9&&y<=2)return 2;if(x>=4&&x<=9&&y===3)return 1;
+   if(x>=6&&x<=9&&y>=8)return 1;return 0;
+  },
+  props:[[6,2,'fallen-root'],[8,8,'root-rock'],[14,4,'fallen-root'],[17,7,'root-rock']]
+ }
 };
 function points(b,test){const result=[];for(let y=0;y<FIELD_H;y++)for(let x=0;x<FIELD_W;x++)if(b.roomTiles[y*FIELD_W+x]&&test(x,y))result.push({x,y});return result}
 function shuffled(list){return list.map(value=>({value,sort:Math.random()})).sort((a,b)=>a.sort-b.sort).map(x=>x.value)}
