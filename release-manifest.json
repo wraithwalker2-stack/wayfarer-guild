@@ -1,8 +1,8 @@
 {
-  "release": "0.7.2-alpha",
-  "generatedAt": "2026-11-03T06:48:21.706Z",
-  "files": 150,
-  "bytes": 82637878,
+  "release": "0.8.2-alpha",
+  "generatedAt": "2026-11-05T05:09:37.090Z",
+  "files": 191,
+  "bytes": 87945908,
   "largest": [
     {
       "file": "assets/aureline-continent-v2.png",
@@ -23,6 +23,10 @@
     {
       "file": "assets/codex-people-atlas-v1.png",
       "bytes": 3073859
+    },
+    {
+      "file": "assets/star-sign-atlas-v1.png",
+      "bytes": 2894068
     },
     {
       "file": "assets/codex-locations-atlas-v1.png",
@@ -47,10 +51,6 @@
     {
       "file": "assets/moss-crystals.webp",
       "bytes": 2452040
-    },
-    {
-      "file": "assets/ashen-archives.webp",
-      "bytes": 2422834
     }
   ]
 }

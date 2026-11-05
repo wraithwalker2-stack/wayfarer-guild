@@ -6,9 +6,9 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.8.1-alpha',
+  version: '0.8.2-alpha',
     saveFormat: 1,
-    build: 'living-battle-models'
+    build: 'immersive-combat-audio'
   });
 
   function read(key, fallback = null) {

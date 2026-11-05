@@ -1,0 +1,24 @@
+html.combat-immersive,body.combat-immersive{overflow:hidden!important;overscroll-behavior:none!important}
+body.combat-immersive #battlePanel.combat-immersive-panel{position:fixed!important;inset:0!important;z-index:12000!important;width:100vw!important;height:100dvh!important;margin:0!important;padding:10px 12px 12px!important;border:0!important;border-radius:0!important;box-sizing:border-box!important;display:grid!important;grid-template-rows:auto minmax(0,1fr)!important;background:radial-gradient(circle at 50% 32%,#26322d 0,#111816 58%,#080c0b 100%)!important;overflow:hidden!important}
+body.combat-immersive #battlePanel .battlehead{min-height:48px;margin:0!important;padding:7px 10px!important;box-sizing:border-box;border:1px solid #cdb87945;border-radius:8px 8px 0 0;background:#101715e8;align-items:center!important;z-index:5}
+body.combat-immersive #battlePanel .battlehead strong{font-size:clamp(10px,1.15vw,14px);letter-spacing:.08em}
+body.combat-immersive #battlePanel .battlehead .battleactions{align-items:center;justify-content:flex-end}
+body.combat-immersive #battlePanel .battlehead .button{padding:7px 10px!important;font-size:9px!important}
+body.combat-immersive #battlePanel .battlebody{display:grid!important;grid-template-columns:minmax(0,1fr) 88px!important;gap:8px!important;min-width:0!important;min-height:0!important;height:100%!important;padding:0!important;overflow:hidden!important}
+body.combat-immersive #battlePanel .battlegrid-wrap{width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;max-width:none!important;margin:0!important;border:1px solid #cdb87935;border-top:0;border-radius:0 0 0 9px;background:#080d0ccc;overflow:auto!important;scrollbar-gutter:stable!important;overscroll-behavior:contain!important}
+body.combat-immersive #battlePanel .battlegrid{margin:0 auto!important}
+body.combat-immersive #run>.runhead,body.combat-immersive #run>.runbody,body.combat-immersive #run>.runpanel{display:none!important}
+body.combat-immersive .side,body.combat-immersive .topbar{visibility:hidden!important;pointer-events:none!important}
+.enemy-portrait-rail{min-height:0;padding:7px 5px;display:flex;flex-direction:column;align-items:center;gap:6px;overflow-y:auto;overflow-x:hidden;border:1px solid #cdb87945;border-top:0;border-radius:0 0 9px 0;background:linear-gradient(180deg,#171e1bcc,#0c1110f2);scrollbar-width:thin}
+.enemy-rail-mark{flex:none;width:29px;height:29px;display:grid;place-items:center;border:1px solid #cdb87955;border-radius:50%;color:#e1ca81;background:#312c20;font-size:13px}
+.enemy-portrait-button{position:relative;flex:none;width:66px;height:72px;padding:0;border:1px solid #986f5d80;border-radius:8px;background:radial-gradient(ellipse at 50% 74%,#7c493c52,#111817 72%);overflow:hidden;cursor:pointer;box-shadow:0 4px 12px #0008;transition:transform .15s,border-color .15s,filter .15s}
+.enemy-portrait-button:hover,.enemy-portrait-button:focus-visible{transform:translateX(-3px) scale(1.04);border-color:#efc292;outline:2px solid #f0d49480;outline-offset:1px}
+.enemy-portrait-button>.unit-sprite{position:absolute;inset:0 2px 7px;width:auto!important;height:auto!important;min-height:0!important;background-repeat:no-repeat}
+.enemy-portrait-button>i{position:absolute;left:5px;right:5px;bottom:4px;height:5px;border:1px solid #170d0b;border-radius:5px;background:#321714;overflow:hidden;z-index:4}
+.enemy-portrait-button>i>b{display:block;height:100%;background:linear-gradient(90deg,#d64045,#ff8b69);box-shadow:0 0 5px #ff7255}
+.enemy-portrait-button>small{position:absolute;right:5px;top:4px;z-index:4;padding:1px 3px;border-radius:3px;background:#0a0e0ddb;color:#fff;font:8px 'DM Mono',monospace}
+.enemy-portrait-button.defeated{filter:grayscale(1);opacity:.36}.enemy-portrait-button.defeated>i>b{width:0!important}
+.enemy-portrait-fallback{display:grid;place-items:center;height:60px;font-size:25px}
+body.combat-immersive .modalback{z-index:13000!important}
+@media(max-width:720px){body.combat-immersive #battlePanel.combat-immersive-panel{padding:5px!important}body.combat-immersive #battlePanel .battlebody{grid-template-columns:minmax(0,1fr) 66px!important;gap:4px!important}.enemy-portrait-rail{padding:5px 3px}.enemy-portrait-button{width:54px;height:61px}.enemy-rail-mark{width:25px;height:25px}.v3-action-menu{max-width:175px}}
+
