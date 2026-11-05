@@ -530,6 +530,7 @@
 #battlePanel.combat-v3 .battleinfo .revive-targets{display:none!important}
 @media(max-width:850px){.v3-action-menu{width:190px;transform:translate(-20px,-8px)}#battlePanel.combat-v3 .iso-cell[data-height="3"]:after{height:calc(78px * var(--iso-scale,1))!important}}
 #battlePanel,#battlePanel .battlegrid-wrap,#battlePanel .battlegrid,#battlePanel .battleinfo{overflow-anchor:none}
+.v3-resolution-banner{position:absolute;z-index:120;left:50%;top:50%;transform:translate(-50%,-50%);min-width:min(420px,82vw);padding:22px 28px;border:1px solid #e0c87999;border-radius:12px;background:#101713ee;box-shadow:0 16px 55px #000c;text-align:center;color:#f4ead0;pointer-events:none}.v3-resolution-banner b{display:block;font:700 clamp(20px,4vw,38px) Unbounded,sans-serif;letter-spacing:.12em;color:#e7ca75;text-shadow:0 3px 18px #000}.v3-resolution-banner small{display:block;margin-top:8px;font:10px 'DM Mono',monospace;letter-spacing:.08em;color:#d6d2c2}.combat-v3.resolving .battlegrid-wrap{filter:saturate(.72) brightness(.82)}
 
 
 /* combat-immersive.css */
@@ -557,3 +558,4 @@ body.combat-immersive #battlePanel .battleinfo{display:none!important}
 .enemy-portrait-fallback{display:grid;place-items:center;height:60px;font-size:25px}
 body.combat-immersive .modalback{z-index:13000!important}
 @media(max-width:720px){body.combat-immersive #battlePanel.combat-immersive-panel{padding:5px!important}body.combat-immersive #battlePanel .battlebody{grid-template-columns:minmax(0,1fr) 66px!important;gap:4px!important}.enemy-portrait-rail{padding:5px 3px}.enemy-portrait-button{width:54px;height:61px}.enemy-rail-mark{width:25px;height:25px}.v3-action-menu{max-width:175px}}
+

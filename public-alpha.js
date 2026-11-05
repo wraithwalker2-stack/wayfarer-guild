@@ -3,7 +3,7 @@
 
   const RELEASE = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.9.3-alpha',
+  version: '0.9.4-alpha',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];
