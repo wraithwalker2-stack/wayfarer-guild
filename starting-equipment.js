@@ -1,4 +1,4 @@
-/* Equip the six founding adventurers when a genuinely fresh guild is created. */
+/* Equip the player guildmaster and four founding companions on a fresh save. */
 (function(){
 'use strict';
 const KEY='wayfarer-starting-loadouts-v1';
@@ -22,10 +22,11 @@ function loadout(job,index){
  ];
 }
 function freshGuild(){
- return Array.isArray(heroes)&&heroes.length===6&&(Number(renown)||0)===0&&!(activeJobs||[]).length&&heroes.every(h=>(h.level||1)===1&&(h.xp||0)===0&&Object.values(h.jobProgress||{}).every(p=>(p?.earned||0)===0));
+ return Array.isArray(heroes)&&heroes.length===5&&(Number(renown)||0)===0&&!(activeJobs||[]).length&&heroes.every(h=>(h.level||1)===1&&(h.xp||0)===0&&Object.values(h.jobProgress||{}).every(p=>(p?.earned||0)===0));
 }
 function install(){
  if(localStorage.getItem(KEY))return false;
+ if(!localStorage.getItem('wayfarer-founder-v1')&&Array.isArray(heroes)&&heroes.length===4)return false;
  if(!freshGuild()){localStorage.setItem(KEY,'existing-save');return false}
  const state=window.wayfarerGearState;if(!state?.items||!state?.inventory)return false;
  const obsolete=new Set(['starter-blade','starter-coat']);state.items=state.items.filter(item=>!obsolete.has(item.id));state.inventory=state.inventory.filter(id=>!obsolete.has(id));
@@ -39,6 +40,6 @@ function install(){
  if(typeof renderAll==='function')renderAll();return true;
 }
 const installed=install();
-window.WayfarerStartingEquipment=Object.freeze({version:'1.0.0',installed,audit(){return{installed:localStorage.getItem(KEY)==='equipped',heroes:heroes.map(h=>({id:h.id,job:h.currentJob||h.cls,weapon:gearItem(h.equipment?.mainHand)?.name||null,chest:gearItem(h.equipment?.chest)?.name||null,feet:gearItem(h.equipment?.feet)?.name||null}))}}});
+window.WayfarerStartingEquipment=Object.freeze({version:'1.1.0',installed,audit(){return{installed:localStorage.getItem(KEY)==='equipped',heroes:heroes.map(h=>({id:h.id,job:h.currentJob||h.cls,weapon:gearItem(h.equipment?.mainHand)?.name||null,chest:gearItem(h.equipment?.chest)?.name||null,feet:gearItem(h.equipment?.feet)?.name||null}))}}});
 })();
 

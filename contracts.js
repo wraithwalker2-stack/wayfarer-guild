@@ -25,7 +25,7 @@ function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 function mission(id){return CONTRACTS.find(x=>x.id===id)}
 function completed(id){return state.completed.some(x=>x.id===id)}
 function unlocked(c){return c.prerequisites.every(completed)}
-function calendar(day=state.day){return `Autumn · Year 1 · Day ${Math.max(1,day)}`}
+function calendar(day=state.day){return window.WayfarerCalendar?.formatCampaignDay(day)||`Dawnsreach ${Math.max(1,day)} · Year 1`}
 function status(c){if(completed(c.id))return'complete';if(state.active===c.id)return'active';if(unlocked(c))return'available';return'locked'}
 function rewardText(c){return `${c.reward.gold} gold · ${c.reward.renown} renown · ${c.days} day${c.days===1?'':'s'} pass`}
 function availableMarkup(){
@@ -72,3 +72,4 @@ window.wayfarerContractProgress=function(){return{active:state.active,completed:
 function install(){const main=document.querySelector('main.main'),nav=document.querySelector('.nav');if(!main||!nav||document.getElementById('contracts'))return;main.insertAdjacentHTML('beforeend',pageMarkup());const button=document.createElement('button');button.dataset.page='contracts';button.innerHTML=`<span>${typeof guildArt==='function'?guildArt('contract','small'):'◆'}</span> Contracts`;button.onclick=showContractsPage;const jobs=nav.querySelector('[data-page="jobs"]');nav.insertBefore(button,jobs||nav.firstChild);render()}
 install();
 })();
+

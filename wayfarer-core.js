@@ -6,7 +6,7 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-    version: '0.7.19-alpha',
+  version: '0.8.0-alpha',
     saveFormat: 1,
     build: 'living-battle-models'
   });
