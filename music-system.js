@@ -36,6 +36,7 @@ function stop(){fade(0,260,()=>player.pause());started=false;updateUi()}
 function toggle(){settings.enabled=!settings.enabled;saveSettings();settings.enabled?start():stop();updateUi()}
 function control(){if(settings.enabled&&!started)start();else toggle()}
 function setVolume(value){settings.volume=Math.max(0,Math.min(1,Number(value)||0));saveSettings();if(started)fade(targetVolume(),180);updateUi()}
+function duck(duration=1400){if(!started||player.paused)return;fade(Math.min(.08,targetVolume()*.24),120);setTimeout(()=>{if(started&&!player.paused&&settings.enabled)fade(targetVolume(),420)},Math.max(300,duration))}
 function mount(){const side=document.querySelector('.side-bottom');if(!side||document.getElementById('musicConsole'))return;side.insertAdjacentHTML('beforeend',`<section class="music-console" id="musicConsole"><button class="music-toggle" id="musicToggle" type="button" aria-label="Start or mute music">♫</button><b>ORCHESTRAL SCORE</b><small class="music-now" id="musicNow"></small><input class="music-volume" id="musicVolume" type="range" min="0" max="1" step=".05" value="${settings.volume}" aria-label="Music volume"></section>`);document.getElementById('musicToggle').addEventListener('click',control);document.getElementById('musicVolume').addEventListener('input',e=>setVolume(e.target.value));updateUi()}
 function updateUi(){const box=document.getElementById('musicConsole'),button=document.getElementById('musicToggle'),now=document.getElementById('musicNow');if(!box)return;box.classList.toggle('muted',!settings.enabled);box.classList.toggle('waiting',settings.enabled&&!started);if(button){button.textContent=settings.enabled?'♫':'♩';button.title=!settings.enabled?'Play music':started?'Mute music':'Start music'}if(now)now.textContent=!settings.enabled?'Music muted':started?themes[currentMood].name:'Click ♫ to start the score'}
 function unlock(event){if(event.target?.closest?.('#musicToggle'))return;if(settings.enabled&&!started)start()}
@@ -43,5 +44,5 @@ mount();document.addEventListener('pointerdown',unlock,{capture:true,passive:tru
 if(!timer)timer=setInterval(syncMood,800);
 const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();syncMood();return result};
 player.addEventListener('error',()=>{started=false;updateUi()});
-window.WayfarerMusic=Object.freeze({version:'3.1.0',start,toggle,setVolume,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
+window.WayfarerMusic=Object.freeze({version:'3.2.0',start,toggle,setVolume,duck,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
 })();

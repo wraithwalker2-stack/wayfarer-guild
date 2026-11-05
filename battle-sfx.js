@@ -10,7 +10,7 @@ const sources={
   win:['./assets/sfx-victory.ogg']
 };
 const bank=Object.fromEntries(Object.entries(sources).map(([kind,files])=>[kind,files.map(src=>{const audio=new Audio(src);audio.preload='auto';return audio})]));
-let sequence=0;
+let sequence=0,lastTerminalFx=0;
 function enabled(){return typeof soundEnabled==='undefined'||soundEnabled}
 function emit(kind,{delay=0,volume=.28,rate=1}={}){
   if(!enabled())return;
@@ -21,6 +21,10 @@ function emit(kind,{delay=0,volume=.28,rate=1}={}){
 }
 function play(kind){
   if(!enabled())return;
+  if(kind==='win'||kind==='defeat'){
+    const now=Date.now();if(now-lastTerminalFx<1200)return;lastTerminalFx=now;
+    window.WayfarerMusic?.duck?.(kind==='win'?1700:1200);
+  }
   if(kind==='attack'){emit('attack',{volume:.34,rate:.96+Math.random()*.09});emit('hit',{delay:105,volume:.24,rate:.94+Math.random()*.08});return}
   if(kind==='hit'){emit('hit',{volume:.34,rate:.9+Math.random()*.12});return}
   if(kind==='move'){emit('move',{volume:.2,rate:.93+Math.random()*.14});return}
@@ -33,5 +37,5 @@ window.playSfx=play;
 for(const group of Object.values(bank))for(const audio of group)audio.load();
 const priorLose=window.loseBattle;
 if(typeof priorLose==='function')window.loseBattle=function(...args){play('defeat');return priorLose.apply(this,args)};
-window.WayfarerSfx=Object.freeze({version:'1.0.0',play,get enabled(){return enabled()}});
+window.WayfarerSfx=Object.freeze({version:'1.1.0',play,get enabled(){return enabled()}});
 })();

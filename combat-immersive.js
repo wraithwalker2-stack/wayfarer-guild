@@ -3,7 +3,8 @@
 'use strict';
 const priorRenderRun=window.renderRun,priorRenderBattle=window.renderBattle;
 let savedScroll=0,immersive=false;
-function battle(){return window.runState?.battle||null}
+function state(){return typeof runState!=='undefined'?runState:window.runState}
+function battle(){return state()?.battle||null}
 function enemyPortrait(foe){
  const profile=typeof ENEMY_CATALOG!=='undefined'?ENEMY_CATALOG[foe.archetype]||{}:{};
  const sprite=Number.isFinite(profile.sprite)?profile.sprite:0;
@@ -31,5 +32,5 @@ function sync(){
 window.renderBattle=function(...args){const result=priorRenderBattle.apply(this,args);enhance();sync();return result};
 window.renderRun=function(...args){const result=priorRenderRun.apply(this,args);sync();return result};
 sync();
-window.WayfarerCombatImmersive=Object.freeze({version:'1.0.0',sync,get active(){return immersive}});
+window.WayfarerCombatImmersive=Object.freeze({version:'1.1.0',sync,get active(){return immersive}});
 })();

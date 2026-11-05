@@ -543,7 +543,8 @@ body.combat-immersive #battlePanel .battlebody{display:grid!important;grid-templ
 body.combat-immersive #battlePanel .battlegrid-wrap{width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;max-width:none!important;margin:0!important;border:1px solid #cdb87935;border-top:0;border-radius:0 0 0 9px;background:#080d0ccc;overflow:auto!important;scrollbar-gutter:stable!important;overscroll-behavior:contain!important}
 body.combat-immersive #battlePanel .battlegrid{margin:0 auto!important}
 body.combat-immersive #run>.runhead,body.combat-immersive #run>.runbody,body.combat-immersive #run>.runpanel{display:none!important}
-body.combat-immersive .side,body.combat-immersive .topbar{visibility:hidden!important;pointer-events:none!important}
+body.combat-immersive .sidebar,body.combat-immersive .side,body.combat-immersive .top,body.combat-immersive .topbar{visibility:hidden!important;pointer-events:none!important}
+body.combat-immersive #battlePanel .battleinfo{display:none!important}
 .enemy-portrait-rail{min-height:0;padding:7px 5px;display:flex;flex-direction:column;align-items:center;gap:6px;overflow-y:auto;overflow-x:hidden;border:1px solid #cdb87945;border-top:0;border-radius:0 0 9px 0;background:linear-gradient(180deg,#171e1bcc,#0c1110f2);scrollbar-width:thin}
 .enemy-rail-mark{flex:none;width:29px;height:29px;display:grid;place-items:center;border:1px solid #cdb87955;border-radius:50%;color:#e1ca81;background:#312c20;font-size:13px}
 .enemy-portrait-button{position:relative;flex:none;width:66px;height:72px;padding:0;border:1px solid #986f5d80;border-radius:8px;background:radial-gradient(ellipse at 50% 74%,#7c493c52,#111817 72%);overflow:hidden;cursor:pointer;box-shadow:0 4px 12px #0008;transition:transform .15s,border-color .15s,filter .15s}

@@ -18,9 +18,9 @@ window.playSfx=richSfx;
 function visualFx(kind){const panel=document.getElementById('battlePanel');if(!panel||!runState?.battle)return;const now=Date.now();if(lastFx.kind===kind&&now-lastFx.at<90)return;lastFx={kind,at:now};const cls=`combat-fx-${kind}`;panel.classList.remove(cls);void panel.offsetWidth;panel.classList.add(cls);setTimeout(()=>panel.classList.remove(cls),520)}
 function classifyLog(message){const text=String(message||'');if(/victory|objective complete|wins the encounter/i.test(text))return'win';if(/overwhelmed|retreats|defeat/i.test(text))return'lose';if(/restore|heals?|reviv|rises with|mending|vigor to/i.test(text))return'heal';if(/unleashes|uses |invokes|prepares|warning:|casts?/i.test(text))return'ability';if(/takes? \d+|strikes?|hits?|damage|cleave|pounce|flare|ray/i.test(text))return'hit';return''}
 const priorLog=window.recordBattleLog;
-window.recordBattleLog=function(message,...args){const result=priorLog.call(this,message,...args),kind=classifyLog(message);if(kind){visualFx(kind);richSfx(kind)}return result};
+window.recordBattleLog=function(message,...args){const result=priorLog.call(this,message,...args),kind=classifyLog(message);if(kind){visualFx(kind);if(kind!=='win'&&kind!=='lose')richSfx(kind)}return result};
 const priorRender=window.renderBattle;
 window.renderBattle=function(...args){const result=priorRender.apply(this,args),panel=document.getElementById('battlePanel'),b=runState?.battle;if(!panel||!b)return result;panel.classList.add('combat-polish');panel.dataset.turn=b.turn;const actor=activeBattleHero?.();if(actor){const grid=panel.querySelector('.battlegrid'),cell=grid?.children?.[actor.y*FIELD_W+actor.x];cell?.classList.add('current-actor')}return result};
 document.addEventListener('pointerdown',event=>{if(event.target.closest?.('#battlePanel button')&&audioContext?.state==='suspended')audioContext.resume?.().catch(()=>{})},{passive:true});
-window.WayfarerCombatFx=Object.freeze({version:'1.0.0',play:richSfx,flash:visualFx});
+window.WayfarerCombatFx=Object.freeze({version:'1.1.0',play:richSfx,flash:visualFx});
 })();
