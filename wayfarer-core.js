@@ -6,9 +6,9 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.8.4-alpha',
+  version: '0.8.5-alpha',
     saveFormat: 1,
-    build: 'clean-orchestral-master'
+    build: 'location-orchestral-score'
   });
 
   function read(key, fallback = null) {
@@ -84,4 +84,3 @@
   });
   window.WAYFARER_RELEASE = release;
 })();
-

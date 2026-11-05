@@ -1,9 +1,25 @@
 {
-  "release": "0.8.4-alpha",
-  "generatedAt": "2026-11-05T05:37:08.053Z",
-  "files": 197,
-  "bytes": 101442675,
+  "release": "0.8.5-alpha",
+  "generatedAt": "2026-11-05T05:52:15.956Z",
+  "files": 205,
+  "bytes": 134122461,
   "largest": [
+    {
+      "file": "assets/score-road-cc0-v1.ogg",
+      "bytes": 9678736
+    },
+    {
+      "file": "assets/score-solaris-cc0-v1.ogg",
+      "bytes": 9436066
+    },
+    {
+      "file": "assets/score-sepulcher-cc0-v1.ogg",
+      "bytes": 3927574
+    },
+    {
+      "file": "assets/score-ashen-cc0-v1.ogg",
+      "bytes": 3669111
+    },
     {
       "file": "assets/aureline-continent-v2.png",
       "bytes": 3620028
@@ -35,22 +51,6 @@
     {
       "file": "assets/score-guild-v2.wav",
       "bytes": 2656044
-    },
-    {
-      "file": "assets/score-guild-v3.wav",
-      "bytes": 2656044
-    },
-    {
-      "file": "assets/mosslight-v2.webp",
-      "bytes": 2598864
-    },
-    {
-      "file": "assets/moss-ruins.webp",
-      "bytes": 2560032
-    },
-    {
-      "file": "assets/moss-terraces.webp",
-      "bytes": 2504966
     }
   ]
 }
