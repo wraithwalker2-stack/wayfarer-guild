@@ -1,8 +1,8 @@
 {
-  "release": "0.8.3-alpha",
-  "generatedAt": "2026-11-05T05:30:18.860Z",
-  "files": 194,
-  "bytes": 94693520,
+  "release": "0.8.4-alpha",
+  "generatedAt": "2026-11-05T05:37:08.053Z",
+  "files": 197,
+  "bytes": 101442675,
   "largest": [
     {
       "file": "assets/aureline-continent-v2.png",
@@ -37,6 +37,10 @@
       "bytes": 2656044
     },
     {
+      "file": "assets/score-guild-v3.wav",
+      "bytes": 2656044
+    },
+    {
       "file": "assets/mosslight-v2.webp",
       "bytes": 2598864
     },
@@ -47,10 +51,6 @@
     {
       "file": "assets/moss-terraces.webp",
       "bytes": 2504966
-    },
-    {
-      "file": "assets/moss-stream.webp",
-      "bytes": 2485718
     }
   ]
 }
