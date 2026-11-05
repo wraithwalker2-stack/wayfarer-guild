@@ -6,9 +6,9 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.8.5-alpha',
+  version: '0.8.6-alpha',
     saveFormat: 1,
-    build: 'location-orchestral-score'
+    build: 'greenway-score-and-battle-sfx'
   });
 
   function read(key, fallback = null) {

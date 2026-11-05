@@ -15,15 +15,18 @@ const themes={
 const player=new Audio();player.loop=true;player.preload='auto';player.volume=0;let currentMood='guild',started=false,timer=null,fadeTimer=null;
 function saveSettings(){localStorage.setItem(KEY,JSON.stringify(settings))}
 function locationTheme(){
-  const dungeon=window.runState?.dungeon;
-  const key=String(dungeon?.id||dungeon?.name||'').toLowerCase();
+  const activeRun=typeof runState!=='undefined'?runState:null;
+  const dungeon=activeRun?.dungeon;
+  const battlefield=activeRun?.battle;
+  const selected=typeof selectedDungeon!=='undefined'?selectedDungeon:'';
+  const key=String(dungeon?.id||dungeon?.name||battlefield?.battlefieldId||battlefield?.battlefieldName||selected||'').toLowerCase();
   if(key.includes('mosslight')||key.includes('warren'))return'mosslight';
   if(key.includes('ashen')||key.includes('observatory'))return'ashen';
   if(key.includes('sepulcher')||key.includes('hollow'))return'sepulcher';
   if(key.includes('greenway')||key.includes('crossing'))return'greenway';
   return null;
 }
-function mood(){const location=locationTheme();if(location)return location;if(window.runState?.battle)return'battle';const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','world','run'].includes(active)?'road':'guild'}
+function mood(){const activeRun=typeof runState!=='undefined'?runState:null;const location=locationTheme();if(location&&activeRun)return location;if(activeRun?.battle)return'battle';const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','world','run'].includes(active)?'road':'guild'}
 function targetVolume(){return Math.max(0,Math.min(.42,settings.volume*.42))}
 function fade(to,duration=650,done){clearInterval(fadeTimer);const from=player.volume,start=performance.now();fadeTimer=setInterval(()=>{const p=Math.min(1,(performance.now()-start)/duration);player.volume=from+(to-from)*(1-(1-p)**2);if(p>=1){clearInterval(fadeTimer);fadeTimer=null;done?.()}},32)}
 function loadTheme(next,autoplay=true){currentMood=next;const theme=themes[next];const finish=()=>{player.src=theme.src;player.load();if(autoplay&&settings.enabled)player.play().then(()=>{started=true;fade(targetVolume(),900);updateUi()}).catch(()=>{started=false;updateUi()});else updateUi()};if(!player.paused&&player.volume>.01)fade(0,420,finish);else finish()}
@@ -40,5 +43,5 @@ mount();document.addEventListener('pointerdown',unlock,{capture:true,passive:tru
 if(!timer)timer=setInterval(syncMood,800);
 const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();syncMood();return result};
 player.addEventListener('error',()=>{started=false;updateUi()});
-window.WayfarerMusic=Object.freeze({version:'3.0.0',start,toggle,setVolume,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
+window.WayfarerMusic=Object.freeze({version:'3.1.0',start,toggle,setVolume,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
 })();

@@ -1,8 +1,8 @@
 {
-  "release": "0.8.5-alpha",
-  "generatedAt": "2026-11-05T05:52:15.956Z",
-  "files": 205,
-  "bytes": 134122461,
+  "release": "0.8.6-alpha",
+  "generatedAt": "2026-11-05T06:55:33.090Z",
+  "files": 213,
+  "bytes": 134864802,
   "largest": [
     {
       "file": "assets/score-road-cc0-v1.ogg",
