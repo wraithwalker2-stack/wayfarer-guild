@@ -33,4 +33,3 @@ window.renderRun=function(...args){const result=priorRenderRun.apply(this,args);
 sync();
 window.WayfarerCombatImmersive=Object.freeze({version:'1.0.0',sync,get active(){return immersive}});
 })();
-

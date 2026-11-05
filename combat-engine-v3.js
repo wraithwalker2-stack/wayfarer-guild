@@ -62,4 +62,3 @@ const loadedBattle=battle();if(loadedBattle){initializeSession(loadedBattle,fals
 setInterval(()=>{const b=battle();if(b&&!b.deployment&&!b.inspectPaused)resumeSession(b)},900);
 window.WayfarerCombatV3=Object.freeze({version:VERSION,audit(){const b=battle();return b?{version:VERSION,session:b.v3Session,turn:b.turn,round:b.round,mode:runState.mode,activeHero:activeBattleHero()?.id||null,enemyQueue:[...(b.enemyQueue||[])],healthy:livingHeroes(b).length>0&&livingFoes(b).length>0}: {version:VERSION,state:'idle'}}});
 })();
-

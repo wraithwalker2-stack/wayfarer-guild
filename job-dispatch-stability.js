@@ -90,4 +90,3 @@ window.confirmJob=function(){
  }
 };
 })();
-

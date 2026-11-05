@@ -7,4 +7,3 @@ const previousRenderCodex=window.renderCodex;window.renderCodex=function(...args
 const previousRoute=window.renderRoute;document.addEventListener('click',event=>{const pin=event.target.closest?.('.map-location');if(pin)setTimeout(()=>{const card=document.getElementById('routeCard');if(card)card.dataset.location=pin.dataset.location||'solaris'},0)});
 const routeCard=document.getElementById('routeCard');if(routeCard)routeCard.dataset.location=document.querySelector('.map-location.selected')?.dataset.location||'solaris';decorate();
 })();
-

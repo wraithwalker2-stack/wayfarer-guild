@@ -42,4 +42,3 @@ function install(){
 const installed=install();
 window.WayfarerStartingEquipment=Object.freeze({version:'1.1.0',installed,audit(){return{installed:localStorage.getItem(KEY)==='equipped',heroes:heroes.map(h=>({id:h.id,job:h.currentJob||h.cls,weapon:gearItem(h.equipment?.mainHand)?.name||null,chest:gearItem(h.equipment?.chest)?.name||null,feet:gearItem(h.equipment?.feet)?.name||null}))}}});
 })();
-

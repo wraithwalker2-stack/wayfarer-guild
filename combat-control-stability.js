@@ -69,4 +69,3 @@ window.renderBattle=function(...args){
  return result;
 };
 })();
-

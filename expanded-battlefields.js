@@ -62,4 +62,3 @@ enemyRouteToAdjacent=function(foe,target,b){return battlePath(b,foe,target,1)||[
 const priorRender=window.renderBattle;
 window.renderBattle=function(...args){const result=priorRender.apply(this,args),panel=document.getElementById('battlePanel');if(runState?.battle?.expandedBattlefield&&panel){panel.classList.add('expanded-battlefield');panel.dataset.fieldSize='20x11'}return result};
 })();
-

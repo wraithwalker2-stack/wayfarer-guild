@@ -51,4 +51,3 @@ window.setCharacterJob=function(id,job){
 };
 window.WayfarerClassChange=Object.freeze({version:'1.1.0',stableAutoEquip});
 })();
-

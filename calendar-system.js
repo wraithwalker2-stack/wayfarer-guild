@@ -40,4 +40,3 @@ const priorRenderAll=window.renderAll;window.renderAll=function(...args){const r
 window.WayfarerCalendar=Object.freeze({version:'1.1.0',months:MONTHS,birthday,signFor,formatBirthday,formatCampaignDay,ensureBirthday,currentCampaignDay});
 ensureCodex();renderDate();
 })();
-

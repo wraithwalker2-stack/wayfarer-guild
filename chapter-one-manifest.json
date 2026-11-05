@@ -1,0 +1,23 @@
+{
+  "release": "0.9.0-alpha",
+  "architecture": "chapter-one-consolidated",
+  "saveFormat": 1,
+  "saveCompatibility": "0.8.x",
+  "systems": [
+    "founder and calendar",
+    "guild roster and progression",
+    "jobs, contracts, retainers, and factions",
+    "world and Solaris maps",
+    "equipment, market, forge, and apothecary",
+    "classes, job points, skills, passives, and reactions",
+    "expeditions, travel, room templates, and rewards",
+    "tactical combat, AI, objectives, terrain, sound, and statistics",
+    "codex, bestiary, politics, locations, events, and people"
+  ],
+  "entrypoints": {
+    "shell": "index.html",
+    "styles": "chapter-one-release.css",
+    "world": "chapter-one-world.bundle.js",
+    "campaign": "chapter-one-campaign.bundle.js"
+  }
+}

@@ -35,4 +35,3 @@ document.addEventListener('pointerdown',event=>{if(event.target.closest?.('#batt
 document.addEventListener('click',event=>{if(!event.target.closest?.('#battlePanel')||!interactionAnchor)return;const anchor=interactionAnchor;interactionAnchor=null;settle(anchor)},{capture:false,passive:true});
 window.WayfarerCombatViewport=Object.freeze({version:'1.0.0',capture,restore});
 })();
-
