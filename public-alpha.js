@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const RELEASE = window.Wayfarer?.release || Object.freeze({
+  const RELEASE = Object.freeze({
     name: 'Wayfarer Guild',
   version: '0.8.2-alpha',
     saveFormat: 1
