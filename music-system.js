@@ -1,31 +1,27 @@
-/* Original procedural score for Wayfarer Guild. No external audio files or copyrighted music. */
+/* Original rendered orchestral-fantasy score for Wayfarer Guild. */
 (function(){
 'use strict';
-const KEY='wayfarer-music-v1',Audio=window.AudioContext||window.webkitAudioContext;
+const KEY='wayfarer-music-v1';
 let settings={enabled:true,volume:.58};try{settings={...settings,...JSON.parse(localStorage.getItem(KEY)||'null')}}catch{}
-let context=null,master=null,timer=null,nextBar=0,step=0,currentMood='guild',started=false;
-const themes={
- guild:{name:'Solaris at First Light',tempo:72,root:146.83,scale:[0,2,3,7,9,12],chords:[[0,3,7],[2,7,10],[3,7,12],[0,5,9]]},
- road:{name:'Roads of Lumara',tempo:82,root:130.81,scale:[0,2,5,7,9,12],chords:[[0,5,9],[2,7,10],[5,9,12],[0,7,10]]},
- battle:{name:'Steel Beneath the Stars',tempo:104,root:110,scale:[0,3,5,7,10,12],chords:[[0,3,7],[0,5,10],[3,7,10],[0,3,10]]}
-};
+const themes={guild:{name:'Solaris at First Light',src:'./assets/score-guild-v2.wav'},road:{name:'Roads of Lumara',src:'./assets/score-road-v2.wav'},battle:{name:'Steel Beneath the Stars',src:'./assets/score-battle-v2.wav'}};
+const player=new Audio();player.loop=true;player.preload='auto';player.volume=0;let currentMood='guild',started=false,timer=null,fadeTimer=null;
 function saveSettings(){localStorage.setItem(KEY,JSON.stringify(settings))}
-function mood(){if(window.runState?.battle)return'battle';const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','run'].includes(active)?'road':'guild'}
-function createContext(){if(!Audio)return null;if(!context){context=new Audio();master=context.createGain();master.gain.value=0;master.connect(context.destination)}return context}
-function hz(root,semitones){return root*Math.pow(2,semitones/12)}
-function voice(freq,start,duration,type,level,attack=.04){const o=context.createOscillator(),g=context.createGain(),filter=context.createBiquadFilter();o.type=type;o.frequency.setValueAtTime(freq,start);filter.type='lowpass';filter.frequency.value=type==='sine'?900:1500;g.gain.setValueAtTime(.0001,start);g.gain.exponentialRampToValueAtTime(level,start+attack);g.gain.exponentialRampToValueAtTime(.0001,start+duration);o.connect(filter);filter.connect(g);g.connect(master);o.start(start);o.stop(start+duration+.05)}
-function bar(at,theme,index){const beat=60/theme.tempo,chord=theme.chords[index%theme.chords.length];for(const n of chord)voice(hz(theme.root,n-12),at,beat*3.8,'sine',.055,.5);const pattern=currentMood==='battle'?[0,2,1,4,3,1,5,2]:[0,2,4,3,1,3,5,2];pattern.forEach((pick,i)=>{const note=theme.scale[(pick+index)%theme.scale.length],when=at+i*beat*.5,bright=currentMood==='battle'&&i%2===0;voice(hz(theme.root,note+(i>5?12:0)),when,beat*(bright ? .32 : .7),bright?'sawtooth':'triangle',bright ? .018 : .028,.018)});if(currentMood==='battle')for(let i=0;i<4;i++)voice(hz(theme.root,-24),at+i*beat,beat*.18,'square',.012,.008)}
-function schedule(){if(!context||!settings.enabled||context.state!=='running')return;const nextMood=mood();if(nextMood!==currentMood){currentMood=nextMood;step=0;updateUi()}const theme=themes[currentMood],barLength=60/theme.tempo*4;while(nextBar<context.currentTime+1.4){bar(nextBar,theme,step++);nextBar+=barLength}}
-function start(){if(!settings.enabled||!Audio)return;createContext();const activate=()=>{started=context.state==='running';if(!started){updateUi();return}master.gain.cancelScheduledValues(context.currentTime);master.gain.setTargetAtTime(Math.max(.025,settings.volume*.28),context.currentTime,.16);nextBar=Math.max(nextBar,context.currentTime+.03);if(!timer)timer=setInterval(schedule,350);schedule();updateUi()};if(context.state==='running')activate();else context.resume().then(activate).catch(()=>updateUi())}
-function stop(){if(master&&context){master.gain.cancelScheduledValues(context.currentTime);master.gain.linearRampToValueAtTime(0,context.currentTime+.25)}if(timer){clearInterval(timer);timer=null}started=false;updateUi()}
+function mood(){if(window.runState?.battle)return'battle';const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','world','run'].includes(active)?'road':'guild'}
+function targetVolume(){return Math.max(0,Math.min(1,settings.volume*.72))}
+function fade(to,duration=650,done){clearInterval(fadeTimer);const from=player.volume,start=performance.now();fadeTimer=setInterval(()=>{const p=Math.min(1,(performance.now()-start)/duration);player.volume=from+(to-from)*(1-(1-p)**2);if(p>=1){clearInterval(fadeTimer);fadeTimer=null;done?.()}},32)}
+function loadTheme(next,autoplay=true){currentMood=next;const theme=themes[next];const finish=()=>{player.src=theme.src;player.load();if(autoplay&&settings.enabled)player.play().then(()=>{started=true;fade(targetVolume(),900);updateUi()}).catch(()=>{started=false;updateUi()});else updateUi()};if(!player.paused&&player.volume>.01)fade(0,420,finish);else finish()}
+function syncMood(){const next=mood();if(next!==currentMood)loadTheme(next,started)}
+function start(){if(!settings.enabled)return;const next=mood(),matches=player.src.endsWith(themes[next].src.replace('./','/'));if(!player.src||!matches)return loadTheme(next,true);currentMood=next;player.play().then(()=>{started=true;fade(targetVolume(),700);if(!timer)timer=setInterval(syncMood,800);updateUi()}).catch(()=>{started=false;updateUi()})}
+function stop(){fade(0,260,()=>player.pause());started=false;updateUi()}
 function toggle(){settings.enabled=!settings.enabled;saveSettings();settings.enabled?start():stop();updateUi()}
-function setVolume(value){settings.volume=Math.max(0,Math.min(1,Number(value)||0));saveSettings();if(master&&context)master.gain.setTargetAtTime(settings.volume*.28,context.currentTime,.08);updateUi()}
-function control(){if(settings.enabled&&(!started||context?.state!=='running'))start();else toggle()}
-function mount(){const side=document.querySelector('.side-bottom');if(!side||document.getElementById('musicConsole'))return;side.insertAdjacentHTML('beforeend',`<section class="music-console" id="musicConsole"><button class="music-toggle" id="musicToggle" type="button" aria-label="Start or mute music">♫</button><b>ORIGINAL SCORE</b><small class="music-now" id="musicNow"></small><input class="music-volume" id="musicVolume" type="range" min="0" max="1" step=".05" value="${settings.volume}" aria-label="Music volume"></section>`);document.getElementById('musicToggle').addEventListener('click',control);document.getElementById('musicVolume').addEventListener('input',e=>setVolume(e.target.value));updateUi()}
-function updateUi(){const box=document.getElementById('musicConsole'),button=document.getElementById('musicToggle'),now=document.getElementById('musicNow');if(!box)return;const running=started&&context?.state==='running';box.classList.toggle('muted',!settings.enabled);box.classList.toggle('waiting',settings.enabled&&!running);if(button){button.textContent=settings.enabled?'♫':'♩';button.title=!settings.enabled?'Play music':running?'Mute music':'Start music'}if(now)now.textContent=!Audio?'Audio unavailable':!settings.enabled?'Music muted':running?themes[currentMood].name:'Click ♫ to start the score'}
-function unlock(event){if(event.target?.closest?.('#musicToggle'))return;if(settings.enabled&&(!started||context?.state!=='running'))start()}
+function control(){if(settings.enabled&&!started)start();else toggle()}
+function setVolume(value){settings.volume=Math.max(0,Math.min(1,Number(value)||0));saveSettings();if(started)fade(targetVolume(),180);updateUi()}
+function mount(){const side=document.querySelector('.side-bottom');if(!side||document.getElementById('musicConsole'))return;side.insertAdjacentHTML('beforeend',`<section class="music-console" id="musicConsole"><button class="music-toggle" id="musicToggle" type="button" aria-label="Start or mute music">♫</button><b>ORCHESTRAL SCORE</b><small class="music-now" id="musicNow"></small><input class="music-volume" id="musicVolume" type="range" min="0" max="1" step=".05" value="${settings.volume}" aria-label="Music volume"></section>`);document.getElementById('musicToggle').addEventListener('click',control);document.getElementById('musicVolume').addEventListener('input',e=>setVolume(e.target.value));updateUi()}
+function updateUi(){const box=document.getElementById('musicConsole'),button=document.getElementById('musicToggle'),now=document.getElementById('musicNow');if(!box)return;box.classList.toggle('muted',!settings.enabled);box.classList.toggle('waiting',settings.enabled&&!started);if(button){button.textContent=settings.enabled?'♫':'♩';button.title=!settings.enabled?'Play music':started?'Mute music':'Start music'}if(now)now.textContent=!settings.enabled?'Music muted':started?themes[currentMood].name:'Click ♫ to start the score'}
+function unlock(event){if(event.target?.closest?.('#musicToggle'))return;if(settings.enabled&&!started)start()}
 mount();document.addEventListener('pointerdown',unlock,{capture:true,passive:true});document.addEventListener('keydown',unlock,{capture:true,passive:true});
-const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();return result};
-window.WayfarerMusic=Object.freeze({version:'1.1.0',start,toggle,setVolume,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return context?.state||'not-created'},get started(){return started}});
+if(!timer)timer=setInterval(syncMood,800);
+const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();syncMood();return result};
+window.WayfarerMusic=Object.freeze({version:'2.0.0',start,toggle,setVolume,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
 })();
 
