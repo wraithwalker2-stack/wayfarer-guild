@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.9.4-combat-resolution-1';
+const CACHE='wayfarer-public-alpha-0.9.5-combat-resolution-2';
 const SHELL=['./','./index.html','./wayfarer-core.js','./chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js','./guild-mark.svg','./manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));

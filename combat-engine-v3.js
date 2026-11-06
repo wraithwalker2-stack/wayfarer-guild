@@ -1,7 +1,7 @@
 /* Wayfarer tactical engine v3: one owner for phases, AI, targeting, camera, and manual orders. */
 (function(){
 'use strict';
-const VERSION='3.1.0';
+const VERSION='3.1.1';
 let timer=null,busy=false,instant=false,serial=0;
 const legacyBeginBattle=window.beginBattle,legacyBattleClick=window.battleClick,legacyRenderBattle=window.renderBattle,legacyRenderRun=window.renderRun;
 function battle(){return runState?.battle||null}
@@ -61,7 +61,7 @@ window.winBattle=function(...args){const b=battle();if(!b||b.v3BypassResolution)
 function resumeSession(b){if(!b||b.deployment||b.inspectPaused||busy||timer)return;if(terminal(b))return;if(b.turn==='heroes'){const actor=activeBattleHero();if(!actor)return window.startEnemyRound();if(runState.mode==='ai')schedule(window.aiBattleStep,40,b)}else if(b.turn==='enemies'){if(!(b.enemyQueue||[]).length)b.enemyQueue=livingFoes(b).map(f=>f.id);schedule(window.enemyBattleStep,40,b)}}
 window.beginBattle=function(...args){const result=legacyBeginBattle.apply(this,args),b=battle();if(!b)return result;initializeSession(b,true);if(runState.mode==='ai'&&!b.deployment)schedule(window.aiBattleStep,160,b);render();return result};
 const loadedBattle=battle();if(loadedBattle){initializeSession(loadedBattle,false);recordBattleLog('Combat control restored under the unified turn system.');render();resumeSession(loadedBattle)}
-setInterval(()=>{const b=battle();if(b&&!b.deployment&&!b.inspectPaused)resumeSession(b)},900);
+setInterval(()=>{const b=battle();if(!b)return;if(!b.v3Resolution&&(!livingFoes(b).length||!livingHeroes(b).length)){terminal(b);return}if(!b.deployment&&!b.inspectPaused)resumeSession(b)},250);
 window.WayfarerCombatV3=Object.freeze({version:VERSION,audit(){const b=battle();return b?{version:VERSION,session:b.v3Session,turn:b.turn,round:b.round,mode:runState.mode,activeHero:activeBattleHero()?.id||null,enemyQueue:[...(b.enemyQueue||[])],healthy:livingHeroes(b).length>0&&livingFoes(b).length>0}: {version:VERSION,state:'idle'}}});
 })();
 
