@@ -10,7 +10,8 @@ const origins={
 };
 let founder=null;
 try{founder=JSON.parse(localStorage.getItem(FOUNDER_KEY)||'null')}catch{}
-let chapter=0,chosen='ward',draft={name:'',guild:'',gender:'woman',tone:'fair',month:0,day:1};
+const DEFAULT_NAMES=Object.freeze({name:'Elara Vale',guild:'The Wayfarer Guild'});
+let chapter=0,chosen='ward',draft={...DEFAULT_NAMES,gender:'woman',tone:'fair',month:0,day:1};
 const chapters=[
  {label:'PROLOGUE · I',title:'A Name Too Small for History',copy:`Solaris is a city built to make people feel small. Sunlit towers rise above crowded wards, noble banners hang over streets they seldom walk, and every road in Lumara seems to end beneath the royal palace.<br><br>You came to the capital bearing a lesser name: the child of a minor house with old obligations, thinning lands, and no seat on the Council of the Sun. Noble enough to understand privilege. Unimportant enough to see what it costs everyone else.`,quote:'“A great house inherits its place. A worthy one earns it.”'},
  {label:'PROLOGUE · II',title:'The Expedition That Changed Everything',copy:`You spent your youth on the road rather than waiting for an inheritance. You guarded caravans, crossed forgotten ruins, and fought beside people whose courage would never appear in a noble chronicle.<br><br>Then an expedition beneath Solaris went wrong. When the retreat was called, the patron ordered the hired adventurers to hold the passage while his household escaped with the relic. You broke the order, brought the survivors home, and discovered that saving lives earns fewer invitations than obeying power.`,quote:'You returned with no relic, a damaged reputation, and the loyalty of people who remembered who came back for them.'},
@@ -28,6 +29,7 @@ function completeIntro(){const name=safe(document.getElementById('founderName')?
 function renderFounder(){if(!founder)return;const brand=document.querySelector('.brand');if(brand){const small=brand.querySelector('small');brand.childNodes[0].nodeValue=founder.guild.toUpperCase()+' ';if(small)small.textContent='Adventurer’s guild · Solaris'}const home=document.getElementById('home');if(!home)return;let panel=document.getElementById('founderRecord');if(!panel){panel=document.createElement('section');panel.id='founderRecord';panel.className='founder-record';const anchor=document.getElementById('guildRankPanel')||home.firstElementChild;anchor?.insertAdjacentElement('afterend',panel)}const born=founder.birthday&&window.WayfarerCalendar?window.WayfarerCalendar.formatBirthday(founder.birthday):'';panel.innerHTML=`<div class="founder-record__seal">${founder.icon}</div><div><small>GUILD FOUNDER · ${founder.house.toUpperCase()}</small><h3>${founder.name}</h3><p>${founder.title} · Guildmaster and field commander of ${founder.guild}${born?` · Born ${born}`:''}</p></div><div class="founder-record__legacy">${founder.legacy}</div>`}
 const priorRenderAll=window.renderAll;window.renderAll=function(...args){const result=priorRenderAll.apply(this,args);renderFounder();return result};
 window.WAYFARER_FOUNDER_KEY=FOUNDER_KEY;
-window.WayfarerFounderIntro=Object.freeze({version:'2.0.0',createFounderHero});
+window.WayfarerFounderIntro=Object.freeze({version:'2.1.0',defaults:DEFAULT_NAMES,createFounderHero});
 if(founder)renderFounder();else showIntro();
 })();
+

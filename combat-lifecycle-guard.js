@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.WayfarerCombatLifecycle)return;
-const VERSION='1.0.0';
+const VERSION='1.1.0';
 let enforcing=false,recoverQueued=false,lastBattle=null;
 function state(){return typeof runState!=='undefined'?runState:window.runState||null}
 function battle(){return state()?.battle||null}
@@ -20,12 +20,19 @@ function lockParty(r){
  });
  document.getElementById('team')?.setAttribute('aria-disabled','true');
  if(r)document.getElementById('team')?.setAttribute('inert','');
+ const prep=document.getElementById('expeditionPrep');
+ if(prep){
+  if(!('combatGuardPreviousHidden' in prep.dataset))prep.dataset.combatGuardPreviousHidden=prep.hidden?'hidden':'visible';
+  prep.hidden=true;prep.setAttribute('inert','');
+ }
 }
 function unlockParty(){
  document.querySelectorAll('[data-combat-guard-previous]').forEach(control=>{
   control.disabled=control.dataset.combatGuardPrevious==='disabled';delete control.dataset.combatGuardPrevious;
  });
  const team=document.getElementById('team');team?.removeAttribute('aria-disabled');team?.removeAttribute('inert');
+ const prep=document.getElementById('expeditionPrep');
+ if(prep&&'combatGuardPreviousHidden' in prep.dataset){prep.hidden=prep.dataset.combatGuardPreviousHidden==='hidden';delete prep.dataset.combatGuardPreviousHidden;prep.removeAttribute('inert')}
 }
 function releaseViewport(){
  document.body.classList.remove('combat-immersive');document.documentElement.classList.remove('combat-immersive');
@@ -35,13 +42,24 @@ function queueRecovery(r,b){
  if(recoverQueued||!r||!b||document.getElementById('battlePanel'))return;
  recoverQueued=true;queueMicrotask(()=>{recoverQueued=false;if(state()!==r||battle()!==b||document.getElementById('battlePanel'))return;try{window.renderRun?.()}catch(error){console.error('Combat lifecycle recovery failed',error)}});
 }
+function queueBattleResolution(r,b){
+ if(!Array.isArray(b?.foes))return;
+ if(b.foes.some(foe=>Number(foe?.hp)>0)){delete b.lifecycleResolutionQueued;return}
+ if(b.lifecycleResolutionQueued)return;
+ b.lifecycleResolutionQueued=true;
+ queueMicrotask(()=>{
+  if(state()!==r||battle()!==b)return;
+  try{window.winBattle?.()}catch(error){console.error('Combat lifecycle resolution failed',error)}
+  if(state()===r&&battle()===b&&b.foes?.some(foe=>Number(foe?.hp)>0))delete b.lifecycleResolutionQueued;
+ });
+}
 function enforce(){
  if(enforcing)return;enforcing=true;
  try{
   const r=state(),b=r?.battle||null;
   if(r)lockParty(r);else unlockParty();
   if(b){
-   activateDungeon();queueRecovery(r,b);
+   activateDungeon();queueRecovery(r,b);queueBattleResolution(r,b);
    document.body.classList.add('combat-immersive');document.documentElement.classList.add('combat-immersive');
    const panel=document.getElementById('battlePanel');if(panel)panel.classList.add('combat-immersive-panel');
    if(lastBattle!==b){lastBattle=b;window.WayfarerMusic?.sync?.()}
