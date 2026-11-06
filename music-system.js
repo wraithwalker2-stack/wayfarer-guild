@@ -10,7 +10,8 @@ const themes={
   greenway:{name:'Beautiful Forest · nene',src:'https://opengameart.org/sites/default/files/beautiful_forest_16bit_44.1khz.ogg'},
   mosslight:{name:'Mysterious Orchestral Theme · nihilocrat',src:'https://opengameart.org/sites/default/files/mystery.ogg'},
   ashen:{name:'Dungeon of Qetzyl · Ragnar Random',src:'https://opengameart.org/sites/default/files/11_-_dungeon_of_qetzyl.ogg'},
-  sepulcher:{name:'Great Labyrinth · MintoDog',src:'https://opengameart.org/sites/default/files/great_labyrinth_bpm160.ogg'}
+  sepulcher:{name:'Great Labyrinth · MintoDog',src:'https://opengameart.org/sites/default/files/great_labyrinth_bpm160.ogg'},
+  sewer:{name:'Whispers in the Fog · Ruhinre',src:'https://opengameart.org/sites/default/files/whispers_in_the_fog.ogg'}
 };
 const player=new Audio();player.loop=true;player.preload='auto';player.volume=0;let currentMood='guild',started=false,timer=null,fadeTimer=null;
 function saveSettings(){localStorage.setItem(KEY,JSON.stringify(settings))}
@@ -24,9 +25,10 @@ function locationTheme(){
   if(key.includes('ashen')||key.includes('observatory'))return'ashen';
   if(key.includes('sepulcher')||key.includes('hollow'))return'sepulcher';
   if(key.includes('greenway')||key.includes('crossing'))return'greenway';
+  if(key.includes('sewer')||key.includes('floodworks'))return'sewer';
   return null;
 }
-function mood(){const activeRun=typeof runState!=='undefined'?runState:null;if(activeRun?.battle)return'battle';const location=locationTheme();if(location&&activeRun)return location;const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','world','run'].includes(active)?'road':'guild'}
+function mood(){const activeRun=typeof runState!=='undefined'?runState:null,location=locationTheme();if(activeRun?.battle)return location||'battle';if(location&&activeRun)return location;const active=document.querySelector('.page.active')?.id;return['dungeon','worldMap','world','run'].includes(active)?'road':'guild'}
 function targetVolume(){return Math.max(0,Math.min(.42,settings.volume*.42))}
 function fade(to,duration=650,done){clearInterval(fadeTimer);const from=player.volume,start=performance.now();fadeTimer=setInterval(()=>{const p=Math.min(1,(performance.now()-start)/duration);player.volume=from+(to-from)*(1-(1-p)**2);if(p>=1){clearInterval(fadeTimer);fadeTimer=null;done?.()}},32)}
 function loadTheme(next,autoplay=true){currentMood=next;const theme=themes[next];const finish=()=>{player.src=theme.src;player.load();if(autoplay&&settings.enabled)player.play().then(()=>{started=true;fade(targetVolume(),900);updateUi()}).catch(()=>{started=false;updateUi()});else updateUi()};if(!player.paused&&player.volume>.01)fade(0,420,finish);else finish()}

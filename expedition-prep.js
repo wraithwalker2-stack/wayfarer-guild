@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const prepData={greenway:{travel:1,rooms:1,level:0,threat:'Variable road encounter',route:'Forest Road',loot:'Forest gear, common materials, Beast and Goblin discoveries'},mosslight:{travel:2,rooms:3,level:1,threat:'Low danger',route:'Crosses Greenway Crossing',loot:'General equipment, medicinal herbs, luminous cavern finds'},ashen:{travel:4,rooms:5,level:5,threat:'High danger',route:'Cinderpeak mountain road',loot:'Rare equipment, magical materials, ember and aether gear'},sepulcher:{travel:5,rooms:7,level:13,threat:'Very high danger',route:'Coastal road through the Drowned March',loot:'Rare to legendary equipment, spirit essence, undead discoveries'}};
+const prepData={greenway:{travel:1,rooms:1,level:0,threat:'Variable road encounter',route:'Forest Road',loot:'Forest gear, common materials, Beast and Goblin discoveries'},sewer:{travel:0,rooms:3,level:1,threat:'Low–moderate city danger',route:'Beneath the lower wards of Solaris',loot:'Common equipment, alchemical reagents, rat and slime discoveries'},mosslight:{travel:2,rooms:3,level:1,threat:'Low danger',route:'Crosses Greenway Crossing',loot:'General equipment, medicinal herbs, luminous cavern finds'},ashen:{travel:4,rooms:5,level:5,threat:'High danger',route:'Cinderpeak mountain road',loot:'Rare equipment, magical materials, ember and aether gear'},sepulcher:{travel:5,rooms:7,level:13,threat:'Very high danger',route:'Coastal road through the Drowned March',loot:'Rare to legendary equipment, spirit essence, undead discoveries'}};
 function party(){return [...document.querySelectorAll('#team input:checked')].map(x=>heroes.find(h=>h.id===Number(x.value))).filter(Boolean)}
 function hasTravelPassive(team){return team.some(h=>[...(h.skills||[]),...(h.equippedPassives||[]),...(h.jobSkills?Object.values(h.jobSkills).flat():[])].some(x=>/sure\W*(footed|step)/i.test(String(x).replaceAll('_',' '))))}
 function roleName(h){const roles=JOBS[h.currentJob||h.cls]?.roles||[];return roles.slice(0,2).map(x=>JOB_ROLE_LABELS[x]||x).join(' · ')||'Adventurer'}
@@ -12,3 +12,4 @@ const oldRenderTeam=renderTeam;renderTeam=function(...args){const result=oldRend
 const oldSetDungeon=setDungeon;setDungeon=function(...args){const result=oldSetDungeon(...args);renderPrep();return result};
 install();
 })();
+

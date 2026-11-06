@@ -9,7 +9,7 @@ const STORIES={
  sunmarket:{
   contract:'sunmarket-ledger',
   scenes:[
-   {eyebrow:'THE GRAND SUNMARKET',title:'Three Claims, One Cargo',copy:'A rain-swollen caravan has arrived with forty bolts of Elderwood silk, but three masters carry manifests naming them as the lawful owner. The Compact wants the market reopened before dusk. Porters whisper that one seal was replaced after the wagon entered Solaris.'},
+   {eyebrow:'THE GRAND SUNMARKET',title:'Three Claims, One Cargo',copy:'A rain-soaked caravan has arrived with forty bolts of Elderwood silk, but three masters carry manifests naming them as the lawful owner. The Compact wants the market reopened before dusk. Porters whisper that one seal was replaced after the wagon entered Solaris.'},
    {eyebrow:'BENEATH THE INK',title:'The Altered Manifest',copy:'Your inquiry reveals that the smallest caravan paid the road toll and protected the cargo, the wealthiest factor financed it, and the third claimant bribed a clerk to replace the receiving page. The fraud is clear; ownership is not.'},
    {eyebrow:'A MARKET REMEMBERS',title:'Terms of Settlement',copy:'Every merchant in the gallery is watching. Your ruling will decide more than the fate of one wagon—it will tell Solaris whether your guild serves written law, practical fairness, or those with the least power.'}
   ],
@@ -63,7 +63,7 @@ function storyId(story){return Object.keys(STORIES).find(id=>STORIES[id]===story
 function choose(storyName,choiceId){
  const story=STORIES[storyName],data=stateFor(storyName),options=story.choices[data.step]||[],choice=options.find(x=>x.id===choiceId);
  if(!choice)return;
- data.choices[data.step]={...choice};data.step=Math.min(story.scenes.length-1,data.step+1);persistStory(storyName,data);renderStory(storyName)
+ data.choices[data.step]={...choice};data.step=Math.min(story.scenes.length-1,data.step+1);persistStory(storyName,data);renderStory(storyName,true)
 }
 function outcomeCopy(storyName,data){
  const final=data.choices[1];
@@ -78,11 +78,12 @@ function finish(storyName){
  if(storyName==='crown'){const first=data.choices[0];if(first.id==='grey-mantle')window.changeFactionReputation?.('arcane_conclave',2,'Consulted the Conclave during the seal inquiry');if(first.id==='street')window.changeFactionReputation?.('free_companies',2,'Trusted field witnesses during the seal inquiry')}
  if(window.completeNarrativeContract?.(story.contract,{resolution,choices:data.choices.map(x=>`${x.title} — ${x.copy}`)})){const all=allState();delete all.stories[storyName];saveAll(all);window.toast?.(`${story.scenes.at(-1).title} recorded in the campaign archive.`)}
 }
-function renderStory(storyName){
+function renderStory(storyName,preserveScroll=false){
+ const pageY=window.scrollY;
  const story=STORIES[storyName],data=stateFor(storyName),scene=story.scenes[data.step],options=story.choices[data.step]||[],root=document.getElementById('contractsContent'),f=founder();if(!root)return;
  const ready=data.step===story.scenes.length-1&&data.choices.length===2;
  root.innerHTML=`<section class="chapter-story"><header><div><small>${safe(scene.eyebrow)}</small><h2>${safe(scene.title)}</h2><p>${safe(f.name)} · ${safe(f.guild)}</p></div><span>SCENE ${data.step+1} / ${story.scenes.length}</span></header><div class="chapter-story-body"><div class="chapter-progress">${story.scenes.map((_,i)=>`<i class="${i<=data.step?'done':''}"></i>`).join('')}</div><article><p>${safe(scene.copy)}</p>${data.choices[0]?`<blockquote>${safe(data.choices[0].title)}</blockquote>`:''}</article>${options.length?`<div class="chapter-choices">${options.map(x=>`<button onclick="chooseChapterStory('${storyName}','${x.id}')"><b>${safe(x.title)}</b><span>${safe(x.copy)}</span></button>`).join('')}</div>`:`<section class="chapter-outcome"><small>YOUR RULING</small><p>${safe(outcomeCopy(storyName,data))}</p></section>`}<footer><button class="button secondary" onclick="showContractsPage()">Return to contracts</button>${ready?`<button class="button green" onclick="finishChapterStory('${storyName}')">Record outcome →</button>`:''}</footer></div></section>`;
- window.scrollTo({top:0,behavior:'smooth'})
+ requestAnimationFrame(()=>window.scrollTo({top:preserveScroll?pageY:0,behavior:preserveScroll?'auto':'smooth'}))
 }
 
 const priorBegin=window.beginNarrativeContract;
@@ -101,3 +102,4 @@ if(typeof priorFinish==='function')window.finishRun=function(...args){const resu
 // Existing saves that finished the former one-click versions keep their records.
 // New or active contracts automatically use the authored scenes above.
 })();
+
