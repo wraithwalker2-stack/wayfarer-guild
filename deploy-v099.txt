@@ -1,3 +1,2 @@
-Wayfarer Guild v0.9.9-alpha deployment marker
-Greenway recovery, enemy art restoration, founder defaults
-Pages rebuild requested through contents API
+Wayfarer Guild v0.9.10-alpha deployment marker
+Founder submission recovery and full playtest candidate
