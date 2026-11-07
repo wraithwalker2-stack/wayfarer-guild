@@ -15,7 +15,8 @@ const ENEMY_CATALOG={
 const HERO_SPRITE_JOBS=['Squire','Alchemist','Rogue','Fighter','Knight','Lancer','Wizard','Cleric','Druid','Archer','Thief','Bard'];
 const AUDIT_BALANCE={actionJP:4,enemyMove:3,enemyHealRange:3,enemyHealThreshold:.7,tauntRange:4,tauntTargets:2};
 const enemyKeyByName=Object.fromEntries(Object.entries(ENEMY_CATALOG).map(([id,d])=>[d.name,id]));
-function enemyProfile(foe){return ENEMY_CATALOG[foe?.archetype||enemyKeyByName[foe?.name]]||ENEMY_CATALOG[runState?.dungeon?.id==='ashen'?'rift_stalker':'grotto_stalker']}
+const UNKNOWN_ENEMY_PROFILE={name:'Unknown foe',dungeon:'unknown',role:'skirmisher',sprite:0,range:1,move:3,armor:0,resistance:0,description:'This enemy is missing a registered field profile.',ability:'Basic attack',behavior:'Advances toward the nearest threat.'};
+function enemyProfile(foe){return ENEMY_CATALOG[foe?.archetype||enemyKeyByName[foe?.name]]||UNKNOWN_ENEMY_PROFILE}
 function allPassiveEffects(h){return equippedPassiveDefs(h).reduce((a,s)=>{for(const[k,v]of Object.entries(s.effect||{}))a[k]=(a[k]||0)+v;return a},{})}
 function combatPower(h,magic=false,ranged=false){const s=h.stats||{},e=allPassiveEffects(h);return 2+(magic?Math.floor((s.intelligence||0)/2)+Math.floor((s.wisdom||0)/8):ranged?Math.floor((s.dexterity||0)/2)+Math.floor((s.strength||0)/8):Math.floor((s.strength||0)/2)+Math.floor((s.dexterity||0)/8))+(e.power||0)+(magic?e.magic||0:0)}
 jobDerived=function(h){const s=h.stats||BASE_STATS[baseJobFor(h)],e=allPassiveEffects(h),caster=basicDamageType(h).magic,ranged=basicDamageType(h).ranged&&!caster;return {maxHp:20+(s.constitution||0)*2+(e.hp||0),power:combatPower(h,caster,ranged),armor:Math.floor((s.constitution||0)/4)+(JOBS[h.currentJob]?.armor||0)+(e.armor||0),stamina:3+Math.floor(((s.strength||0)+(s.constitution||0))/12),e}};

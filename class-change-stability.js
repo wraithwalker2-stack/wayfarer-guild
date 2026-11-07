@@ -42,12 +42,12 @@ window.setCharacterJob=function(id,job){
   syncJobStats(hero,true);stableAutoEquip(hero);
   const changes=Object.keys(gearSlotLabels).filter(slot=>previous[slot]!==hero.equipment?.[slot]).map(slot=>({slot:gearSlotLabels[slot],before:gearItem(previous[slot])?.name||'Empty',after:gearItem(hero.equipment?.[slot])?.name||'Empty'}));
    if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();
-   if(typeof document!=='undefined')document.getElementById('heroModalBack')?.classList.remove('open');
    if(typeof refreshCharacterPanels==='function')refreshCharacterPanels();else if(typeof renderRoster==='function')renderRoster();
-   if(changes.length)showJobGearNotice(hero,changes);toast(`${hero.name} changed jobs to ${job}. Reopen the record to review the new loadout.`);
+   if(typeof openHero==='function')openHero(id,page);
+   if(changes.length)showJobGearNotice(hero,changes);toast(`${hero.name} changed jobs to ${job}. The ${page==='skills'?'JP and skills':'character'} page remains open.`);
  }catch(error){
    for(const key of Object.keys(hero))delete hero[key];Object.assign(hero,snapshot);window.wayfarerGearState.inventory=inventory;console.error('Job change recovered safely',error);if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();toast('The job change could not be completed safely.');
  }finally{changing=false}
 };
-window.WayfarerClassChange=Object.freeze({version:'1.1.0',stableAutoEquip});
+window.WayfarerClassChange=Object.freeze({version:'1.2.0',stableAutoEquip});
 })();
