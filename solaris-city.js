@@ -39,5 +39,6 @@ function applyTavernRecoveryCredit(){const key='wayfarer-tavern-recovery-v1';if(
 applyTavernRecoveryCredit();
 installCity();
 const priorWorldTravel=window.worldTravel;window.worldTravel=function(id){if(id==='solaris'){openSolarisMap();return}return priorWorldTravel(id)};
-const priorShowGuildPage=showGuildPage;showGuildPage=function(id,...args){const result=priorShowGuildPage(id,...args);if(id==='forge'||id==='market'){document.getElementById('pageTitle').textContent=id==='forge'?'Solaris Ironworks':'Grand Sunmarket';document.getElementById(id)?.classList.add('city-business-page')}return result};
+const priorShowGuildPage=showGuildPage;showGuildPage=function(id,...args){const result=priorShowGuildPage(id,...args);if(id==='forge'||id==='market'){const page=document.getElementById(id),title=id==='forge'?'Solaris Ironworks':'Grand Sunmarket',welcome=page?.querySelector('.welcome');document.getElementById('pageTitle').textContent=title;page?.classList.add('city-business-page');page?.classList.remove('regional-business-page');if(page)delete page.dataset.regionalOrigin;if(welcome){welcome.querySelector('h2').textContent=title;welcome.querySelector('p').textContent=id==='forge'?'Independent smiths salvage, craft, and improve equipment for Solaris adventurers.':'Browse independent merchants whose stock reflects guild rank and the classes in your roster.';welcome.querySelector('.regional-business-badge')?.remove()}const back=page?.querySelector('.city-back-button');if(back){back.textContent='← Solaris map';back.onclick=openSolarisMap}}return result};
 })();
+

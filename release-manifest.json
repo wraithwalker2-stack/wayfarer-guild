@@ -1,10 +1,10 @@
 {
-  "release": "0.9.11-alpha.1",
+  "release": "0.9.11-alpha.2",
   "architecture": "chapter-one-consolidated",
-  "generatedAt": "2026-11-07T03:55:09.913Z",
+  "generatedAt": "2026-11-07T05:05:29.063Z",
   "files": 180,
-  "bytes": 96330274,
-  "bundledStyles": 55,
+  "bytes": 96336216,
+  "bundledStyles": 56,
   "bundledScripts": 0,
   "scriptArchitecture": "ordered-modules",
   "largest": [
