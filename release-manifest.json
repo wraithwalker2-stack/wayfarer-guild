@@ -1,13 +1,17 @@
 {
   "release": "0.9.10-alpha",
   "architecture": "chapter-one-consolidated",
-  "generatedAt": "2026-11-06T16:10:24.966Z",
-  "files": 176,
-  "bytes": 91276736,
-  "bundledStyles": 52,
+  "generatedAt": "2026-11-07T03:42:10.470Z",
+  "files": 180,
+  "bytes": 96330124,
+  "bundledStyles": 55,
   "bundledScripts": 0,
   "scriptArchitecture": "ordered-modules",
   "largest": [
+    {
+      "file": "assets/regional-city-map-atlas-v1.png",
+      "bytes": 4331476
+    },
     {
       "file": "assets/aureline-continent-v2.png",
       "bytes": 3620028
@@ -51,10 +55,6 @@
     {
       "file": "assets/moss-stream.webp",
       "bytes": 2485718
-    },
-    {
-      "file": "assets/moss-crystals.webp",
-      "bytes": 2452040
     }
   ]
 }
