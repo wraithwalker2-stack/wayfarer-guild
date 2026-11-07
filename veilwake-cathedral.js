@@ -61,6 +61,7 @@ function decorate(){
  for(const obstacle of b.obstacles||[]){
   const cell=grid.children[obstacle.y*FIELD_W+obstacle.x],model=cell?.querySelector('.obstacle-model');if(!cell||!model)continue;
   const variant=Number.isFinite(obstacle.cathedralModel)?obstacle.cathedralModel:0;
+  Object.assign(obstacle,OBSTACLES[variant]);
   cell.classList.add('veilwake-cathedral-obstacle');cell.dataset.cathedralObstacle=String(variant);
   model.classList.add('cathedral-obstacle-model');model.style.setProperty('--cathedral-obstacle-x',`${variant%2*100}%`);model.style.setProperty('--cathedral-obstacle-y',`${Math.floor(variant/2)*100}%`);
   cell.title=`${obstacle.name}. Blocks movement and line of sight. Elevation ${elevationAt(b,obstacle.x,obstacle.y)}.`;cell.setAttribute('aria-label',cell.title);
