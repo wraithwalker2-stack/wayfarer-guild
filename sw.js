@@ -1,5 +1,5 @@
-const CACHE='wayfarer-public-alpha-0.9.12-veilwake-test';
-const SHELL=['./','./index.html','./wayfarer-core.js','./chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js','./sewer-mission.js','./sewer-mission.css','./campaign-consequences.js','./campaign-consequences.css','./holiday-system.js','./holiday-system.css','./holiday-observances.css','./combat-lifecycle-guard.js','./guild-mark.svg','./manifest.webmanifest'];
+const CACHE='wayfarer-public-alpha-0.9.12-veilwake-rebuild';
+const SHELL=['./','./index.html','./wayfarer-core.js','./chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js','./sewer-mission.js','./sewer-mission.css','./campaign-consequences.js','./campaign-consequences.css','./holiday-system.js','./holiday-system.css','./holiday-observances.css','./assets/veilwake-enemies-v1.png','./assets/veilwake-midnight-court-v1.jpg','./assets/blackglass-cathedral-v1.jpg','./combat-lifecycle-guard.js','./guild-mark.svg','./manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
@@ -11,4 +11,3 @@ self.addEventListener('fetch',event=>{
   }
   event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response}).catch(()=>caches.match(event.request).then(hit=>hit||caches.match('./index.html'))));
 });
-
