@@ -59,6 +59,11 @@ function applySewerTerrain(b){
  for(const p of path.filter((_,i)=>i%4===2)){const n={x:p.x,y:p.y+(p.y<4?1:-1)};if(roomTileExists(b,n.x,n.y)&&!occupied.has(key(n.x,n.y)))b.tileTerrain[key(n.x,n.y)]={type:'water',name:'Overflowing sewer channel'}}
  const candidates=shuffledRoomPoints(templatePoints((x,y)=>!b.tileTerrain[key(x,y)]&&!occupied.has(key(x,y))&&!livingUnitAt(b,x,y)&&path.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)===1),b));for(const p of candidates.slice(0,4))b.tileTerrain[key(p.x,p.y)]={type:'hazard',name:'Caustic runoff',damage:4};b.sewerChannel=path.map(p=>key(p.x,p.y));
 }
+function installSewerEnemies(b,room){
+ const stage=room?.sewerStage||Math.min(3,(runState?.step||0)+1),packs={1:['sewer_rat','sewer_rat','sewer_slime','caustic_slime'],2:['plague_rat','sewer_rat','sewer_slime','sewer_slime','caustic_slime'],3:['sludge_devourer','plague_rat','sewer_slime','caustic_slime','sewer_rat']},keys=packs[stage]||packs[1],avg=runState.ids.reduce((n,id)=>n+(heroes.find(h=>h.id===id)?.level||1),0)/runState.ids.length,level=Math.max(2,Math.round(avg)+stage-1);
+ b.foes=keys.map((enemyKey,i)=>makeRoomEnemy(enemyKey,level,DUNGEON_ID,false,stage===3&&i===0));const occupied=new Set([...b.heroes,...(b.obstacles||[])].map(u=>key(u.x,u.y))),spots=shuffledRoomPoints(templatePoints((x)=>x>=Math.floor(FIELD_W*.55),b)).filter(p=>!occupied.has(key(p.x,p.y)));
+ b.foes.forEach((foe,i)=>{const p=spots.find(p=>!occupied.has(key(p.x,p.y)))||{x:FIELD_W-2,y:1+i};Object.assign(foe,p);occupied.add(key(p.x,p.y));rememberEnemy(foe)});b.compositionName=stage===3?'Sludge Devourer and floodborn brood':stage===2?'Drowned Gallery infestation':'Rainward vermin surge';
+}
 function installRubble(b){
  if(!contractActive()||runState.step!==0||runState.sewerRubblePlaced)return;runState.sewerRubblePlaced=true;runState.sewerRubbleDestroyed=runState.sewerRubbleDestroyed||0;
  let candidates=(b.obstacles||[]).slice(0,RUBBLE_TOTAL);if(candidates.length<RUBBLE_TOTAL)candidates.push(...shuffledRoomPoints(templatePoints((x,y)=>x>4&&!livingUnitAt(b,x,y)&&!fieldObstacleAt(b,x,y),b)).slice(0,RUBBLE_TOTAL-candidates.length));
@@ -66,7 +71,7 @@ function installRubble(b){
  b.sewerSappers=b.heroes.map(u=>heroes.find(h=>h.id===u.id)).filter(h=>h&&!hasJobRole(h,'healer')&&!hasJobRole(h,'caster')).slice(0,2).map(h=>h.id);recordBattleLog('Ashen Ledger objective: destroy both marked rubble piles before the battle ends.');
 }
 
-const priorBegin=beginBattle;beginBattle=function(room,...args){const result=priorBegin(room,...args),b=runState?.battle;if(!b||runState.dungeon.id!==DUNGEON_ID)return result;b.battlefieldId='solaris-floodworks-v1';b.terrainDescription='A continuous flooded channel divides the sewer. Water costs extra movement; caustic runoff damages units that remain on it.';installRubble(b);applySewerTerrain(b);recordBattleLog('Floodwater forms a continuous channel through the room. Caustic runoff marks hazardous ground.');renderRun();return result};
+const priorBegin=beginBattle;beginBattle=function(room,...args){const result=priorBegin(room,...args),b=runState?.battle;if(!b||runState.dungeon.id!==DUNGEON_ID)return result;b.battlefieldId=`solaris-floodworks-v1-stage-${room?.sewerStage||runState.step+1}`;b.terrainDescription='A continuous flooded channel divides the sewer. Water costs extra movement; caustic runoff damages units that remain on it.';installRubble(b);installSewerEnemies(b,room);applySewerTerrain(b);recordBattleLog('Floodwater forms a continuous channel through the room. Caustic runoff marks hazardous ground.');renderRun();return result};
 
 function strikeRubble(b,actor,h,target,ai=false){
  if(!target||target.hp<=0)return false;if(attackActionsUsed(actor)>=extraAttackActions(h)||actor.ap<1){if(!ai)toast(`${h.name} has already attacked this round.`);return false}if(distance(actor,target)>battleRange(h)){if(!ai)toast('That rubble pile is outside attack range.');return false}
