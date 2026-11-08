@@ -38,7 +38,9 @@ window.setCharacterJob=function(id,job){
  if(hero.currentJob===job)return;
  changing=true;const page=heroSheetPage||'overview',snapshot=clone(hero),inventory=[...(window.wayfarerGearState?.inventory||[])],previous={...(hero.equipment||{})};
  try{
-   hero.currentJob=job;hero.baseClass=jobUnlocks[job]||job;hero.evolved=!!jobUnlocks[job];if(hero.subJob===job||!hero.jobSkills?.[job]?.length)hero.subJob='';
+   const previousJob=hero.currentJob,previousSubJob=hero.subJob;
+   hero.currentJob=job;hero.baseClass=jobUnlocks[job]||job;hero.evolved=!!jobUnlocks[job];
+   if(previousSubJob===job){hero.subJob=hero.jobSkills?.[previousJob]?.length?previousJob:''}else if(previousSubJob&&previousSubJob!==job){hero.subJob=previousSubJob}else hero.subJob='';
   syncJobStats(hero,true);stableAutoEquip(hero);
   const changes=Object.keys(gearSlotLabels).filter(slot=>previous[slot]!==hero.equipment?.[slot]).map(slot=>({slot:gearSlotLabels[slot],before:gearItem(previous[slot])?.name||'Empty',after:gearItem(hero.equipment?.[slot])?.name||'Empty'}));
    if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();
@@ -49,5 +51,6 @@ window.setCharacterJob=function(id,job){
    for(const key of Object.keys(hero))delete hero[key];Object.assign(hero,snapshot);window.wayfarerGearState.inventory=inventory;console.error('Job change recovered safely',error);if(typeof persistBuild==='function')persistBuild();else save();if(typeof gearPersist==='function')gearPersist();toast('The job change could not be completed safely.');
  }finally{changing=false}
 };
-window.WayfarerClassChange=Object.freeze({version:'1.2.0',stableAutoEquip});
+window.WayfarerClassChange=Object.freeze({version:'1.3.0',stableAutoEquip});
 })();
+

@@ -38,22 +38,23 @@ function markManualOptions(b,panel,grid){
  const actor=activeBattleHero?.(),h=actor&&heroes.find(hero=>hero.id===actor.id);
  if(!actor||!h||b.turn!=='heroes'||b.deployment||b.inspectPaused||runState.mode!=='manual')return;
  const actorCell=cellAt(grid,actor);actorCell?.classList.add('current-actor');
- if(moveActionsUsed(actor)<extraMoveActions(h)&&actor.ap>0){
+ if(b.v3TargetMode==='move'&&moveActionsUsed(actor)<extraMoveActions(h)&&actor.ap>0){
   for(const tile of reachableTiles(actor)){
    const cell=cellAt(grid,tile);if(!cell||cell.classList.contains('void-cell')||fieldObstacleAt(b,tile.x,tile.y))continue;
    cell.classList.add('reachable','move-option');cell.disabled=false;
   }
  }
- if(attackActionsUsed(actor)<extraAttackActions(h)&&actor.ap>0){
+ if(b.v3TargetMode==='attack'&&attackActionsUsed(actor)<extraAttackActions(h)&&actor.ap>0){
   for(const foe of b.foes.filter(foe=>foe.hp>0)){
    if(!battleCanHit(actor,foe,h,b))continue;
    const cell=cellAt(grid,foe);if(!cell)continue;
    cell.classList.add('attack-option');cell.disabled=false;
   }
  }
+ if(!['move','attack'].includes(b.v3TargetMode)){panel.querySelector('.combat-option-legend')?.remove();return}
  let legend=panel.querySelector('.combat-option-legend');
  if(!legend){legend=document.createElement('div');legend.className='combat-option-legend';panel.querySelector('.battle-toolbar')?.after(legend)}
- if(legend)legend.innerHTML='<span class="move-key">MOVE</span><span class="attack-key">ATTACK</span><small>Highlighted scenery tiles are legal choices for the active adventurer.</small>';
+ if(legend)legend.innerHTML=b.v3TargetMode==='move'?'<span class="move-key">MOVE</span><small>Highlighted tiles are legal destinations.</small>':'<span class="attack-key">ATTACK</span><small>Highlighted enemies are valid targets.</small>';
 }
 
 const stableRender=window.renderBattle;
@@ -69,3 +70,4 @@ window.renderBattle=function(...args){
  return result;
 };
 })();
+

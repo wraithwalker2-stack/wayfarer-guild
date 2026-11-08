@@ -9,9 +9,10 @@ const themes={
   battle:{name:'Hope · MintoDog',src:'https://opengameart.org/sites/default/files/hope_orchestral_battle_music_bpm165.ogg'},
   greenway:{name:'Beautiful Forest · nene',src:'https://opengameart.org/sites/default/files/beautiful_forest_16bit_44.1khz.ogg'},
   mosslight:{name:'Mysterious Orchestral Theme · nihilocrat',src:'https://opengameart.org/sites/default/files/mystery.ogg'},
-  ashen:{name:'Dungeon of Qetzyl · Ragnar Random',src:'https://opengameart.org/sites/default/files/11_-_dungeon_of_qetzyl.ogg'},
-  sepulcher:{name:'Great Labyrinth · MintoDog',src:'https://opengameart.org/sites/default/files/great_labyrinth_bpm160.ogg'},
-  sewer:{name:'Whispers in the Fog · Ruhinre',src:'https://opengameart.org/sites/default/files/whispers_in_the_fog.ogg'}
+  ashen:{name:'Dungeonfire · FazeDevWater',src:'https://opengameart.org/sites/default/files/dungeonfire.ogg'},
+  sepulcher:{name:'Haunted Track — Minor · Gena Sealov',src:'https://opengameart.org/sites/default/files/haunted_track_minor.ogg'},
+  sewer:{name:'Whispers in the Fog · Ruhinre',src:'https://opengameart.org/sites/default/files/whispers_in_the_fog.ogg'},
+  veilwake:{name:'Unsolved Investigation · isaiah658',src:'https://opengameart.org/sites/default/files/Unsolved-Investigation-isaiah658.ogg'}
 };
 const player=new Audio();player.loop=true;player.preload='auto';player.volume=0;let currentMood='guild',started=false,timer=null,fadeTimer=null;
 function saveSettings(){localStorage.setItem(KEY,JSON.stringify(settings))}
@@ -24,6 +25,7 @@ function locationTheme(){
   if(key.includes('mosslight')||key.includes('warren'))return'mosslight';
   if(key.includes('ashen')||key.includes('observatory'))return'ashen';
   if(key.includes('sepulcher')||key.includes('hollow'))return'sepulcher';
+  if(key.includes('veilwake')||key.includes('crimson'))return'veilwake';
   if(key.includes('greenway')||key.includes('crossing'))return'greenway';
   if(key.includes('sewer')||key.includes('floodworks'))return'sewer';
   return null;
@@ -46,6 +48,7 @@ mount();document.addEventListener('pointerdown',unlock,{capture:true,passive:tru
 if(!timer)timer=setInterval(syncMood,800);
 const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();syncMood();return result};
 player.addEventListener('error',()=>{started=false;updateUi()});
-window.WayfarerMusic=Object.freeze({version:'3.3.0',start,toggle,setVolume,duck,sync:syncMood,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
+window.WayfarerMusic=Object.freeze({version:'3.4.0',start,toggle,setVolume,duck,sync:syncMood,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
 })();
+
 

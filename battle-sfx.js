@@ -6,8 +6,7 @@ const sources={
   attack:['./assets/sfx-sword-swish-a.wav','./assets/sfx-sword-swish-b.wav'],
   hit:['./assets/sfx-impact.wav'],
   heal:['./assets/sfx-heal.wav'],
-  ability:['./assets/sfx-magic.ogg'],
-  win:['./assets/sfx-victory.ogg']
+  ability:['./assets/sfx-magic.ogg']
 };
 const bank=Object.fromEntries(Object.entries(sources).map(([kind,files])=>[kind,files.map(src=>{const audio=new Audio(src);audio.preload='auto';return audio})]));
 let sequence=0,lastTerminalFx=0;
@@ -29,7 +28,7 @@ function play(kind){
   if(kind==='hit'){emit('hit',{volume:.34,rate:.9+Math.random()*.12});return}
   if(kind==='move'){emit('move',{volume:.2,rate:.93+Math.random()*.14});return}
   if(kind==='heal'){emit('heal',{volume:.31,rate:.98+Math.random()*.05});return}
-  if(kind==='win'){emit('win',{volume:.4});return}
+  if(kind==='win'){emit('ability',{volume:.16,rate:.78});return}
   if(kind==='defeat'){emit('hit',{volume:.32,rate:.72});emit('ability',{delay:140,volume:.2,rate:.72});return}
   emit('ability',{volume:.28,rate:.95+Math.random()*.1});
 }
@@ -37,5 +36,6 @@ window.playSfx=play;
 for(const group of Object.values(bank))for(const audio of group)audio.load();
 const priorLose=window.loseBattle;
 if(typeof priorLose==='function')window.loseBattle=function(...args){play('defeat');return priorLose.apply(this,args)};
-window.WayfarerSfx=Object.freeze({version:'1.1.0',play,get enabled(){return enabled()}});
+window.WayfarerSfx=Object.freeze({version:'1.2.0',play,get enabled(){return enabled()}});
 })();
+

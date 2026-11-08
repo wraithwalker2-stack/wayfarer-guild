@@ -7,7 +7,7 @@ const KEY='wayfarer-veilwake-v1',DUNGEON_ID='veilwake-crypt';
 function load(){try{return{accepted:false,completed:false,...JSON.parse(localStorage.getItem(KEY)||'null')}}catch{return{accepted:false,completed:false}}}
 let state=load();function saveState(){localStorage.setItem(KEY,JSON.stringify(state))}
 function dayParts(){let day=window.WayfarerCalendar?.currentCampaignDay?.()||1,zero=Math.max(0,day-1)%360;return{month:Math.floor(zero/30),day:zero%30+1,absolute:day}}
-function testing(){try{return new URLSearchParams(location.search).get('veilwake')==='1'}catch{return false}}
+function testing(){try{return new URLSearchParams(location.search).get('veilwake')!=='0'}catch{return true}}
 function active(){const d=dayParts();return testing()||(d.month===HOLIDAY.month&&d.day>=HOLIDAY.start&&d.day<=HOLIDAY.end)}
 function safe(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
@@ -64,3 +64,4 @@ const oldAll=window.renderAll;window.renderAll=function(...args){const r=oldAll.
 window.WayfarerHolidays=Object.freeze({holiday:HOLIDAY,isActive:active,isTesting:testing,status:()=>({...state,date:dayParts(),testing:testing()})});
 installCodex();updateDungeonChoices();festivalBanner();
 })();
+
