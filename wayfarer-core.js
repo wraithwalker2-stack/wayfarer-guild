@@ -6,9 +6,9 @@
   const listeners = new Map();
   const release = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.9.10-alpha',
+  version: '0.10.0-engine',
     saveFormat: 1,
-    build: 'chapter-one-consolidated'
+    build: 'engine-v2-consolidated'
   });
 
   function read(key, fallback = null) {
@@ -84,4 +84,5 @@
   });
   window.WAYFARER_RELEASE = release;
 })();
+
 

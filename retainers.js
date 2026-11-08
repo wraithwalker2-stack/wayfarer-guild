@@ -41,5 +41,6 @@ let clearedRoomStaff=false;for(const room of rooms)if(room.staff){room.staff=nul
 ensurePanels();processRetainers(true);renderRetainers();renderStoreroom();showSection('retainers');
 setInterval(()=>{processRetainers(true);document.querySelectorAll('[data-retainer-eta]').forEach(n=>n.textContent=eta(n.dataset.retainerEta));if(!document.getElementById('guildSection-storeroom')?.hidden)renderStoreroom()},30000);
 const oldRenderAll=window.renderAll;if(typeof oldRenderAll==='function')window.renderAll=function(...args){const result=oldRenderAll.apply(this,args);renderRetainers();renderStoreroom();return result};
-const oldReset=window.resetGame;if(typeof oldReset==='function')window.resetGame=function(){if(!window.confirm('Start a fresh guild? This clears your founder story, tutorial progress, characters, retainers, gear, jobs, Codex records, and noble-house relations.'))return;for(const key of Object.keys(localStorage))if(key.startsWith('wayfarer-')||key==='guild-sfx')localStorage.removeItem(key);window.location.reload()};
+const oldReset=window.resetGame;if(typeof oldReset==='function')window.resetGame=function(){if(!window.confirm('Start a fresh guild? This clears your founder story, tutorial progress, characters, retainers, gear, jobs, Codex records, and noble-house relations.'))return;window.WayfarerEngine.save.resetAll();window.location.reload()};
 })();
+
