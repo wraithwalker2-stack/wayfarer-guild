@@ -7,14 +7,13 @@ const profiles=[
  {name:'Southgate fallen oak',description:'A rain-dark fallen oak beside the capital road.'},
  {name:'Southgate hedgerow',description:'A dense wet hedge offering hard cover.'},
  {name:'Southgate wagon barricade',description:'A broken roadside wagon used as a barricade.'},
- {name:'Floodworks masonry',description:'Collapsed stonework from the Solaris flood channels.'},
- {name:'Floodworks rubble',description:'A marked blockage in a forgotten sewer passage.'}
+ {name:'Floodworks side-passage barrier',description:'A marked destructible blockage in a forgotten sewer passage.'}
 ];
 while(OBSTACLE_MODELS.length<8)OBSTACLE_MODELS.push({name:'Reserved terrain',description:'Location-owned scenery.'});
 for(let i=0;i<profiles.length;i++)OBSTACLE_MODELS[8+i]=profiles[i];
 const themeObstacleIndex=obstacleModelIndex;
 obstacleModelIndex=function(obstacle,theme){
- const map=theme===SOUTHGATE?{'southgate-wall':8,'southgate-tree':9,'southgate-hedge':10,'southgate-wagon':11}:theme===FLOODWORKS?{'sewer-masonry':12,'sewer-rubble':13}:null;
+ const map=theme===SOUTHGATE?{'southgate-wall':8,'southgate-tree':9,'southgate-hedge':10,'southgate-wagon':11}:theme===FLOODWORKS?{'sewer-rubble':12}:null;
  return map?.[obstacle.kind]??(theme===SOUTHGATE?8:theme===FLOODWORKS?12:themeObstacleIndex(obstacle,theme));
 };
 BATTLEFIELDS[SOUTHGATE]=[{id:'southgate-ambush-v2',name:'Southgate Kill Zone',terrain:'Rain-dark meadow, wagon road, tall grass, and roadside cover.',height:(x,y)=>y<=2&&x>=10?1:0}];
@@ -35,8 +34,7 @@ beginBattle=function(room,...args){
  if(theme===FLOODWORKS){
   const stage=room?.sewerStage||Math.min(3,(runState.step||0)+1);
   b.battlefieldId=['floodworks-intake-v2','floodworks-gallery-v2','floodworks-sluice-v2'][stage-1];
-  b.obstacles.forEach(o=>{if(o.optionalObjective)Object.assign(o,{kind:'sewer-rubble',name:o.name||'Marked rubble pile'});else Object.assign(o,{kind:'sewer-masonry',name:'Floodworks masonry'})});
-  for(const [i,position] of (b.sewerChannel||[]).entries())if(i%6===3&&b.tileTerrain?.[position])b.tileTerrain[position]={type:'bridge',name:'Wooden channel bridge'};
+  b.obstacles=b.obstacles.filter(o=>o.optionalObjective);b.obstacles.forEach(o=>Object.assign(o,{kind:'sewer-rubble',name:o.name||'Marked side-passage barrier'}));
   b.foes.forEach(foe=>{const profile=ENEMY_CATALOG[foe.archetype];if(profile?.dungeon===FLOODWORKS){foe.sprite=profile.sprite;foe.locationTheme=FLOODWORKS}});
  }
  renderRun();return result;
@@ -53,9 +51,10 @@ renderBattle=function(...args){
  if(theme===FLOODWORKS)for(const foe of b.foes.filter(f=>f.hp>0)){
   const profile=ENEMY_CATALOG[foe.archetype];if(profile?.dungeon!==FLOODWORKS)continue;
   const cell=panel.querySelector(`[data-world-x="${foe.x}"][data-world-y="${foe.y}"]`),sprite=cell?.querySelector('.enemy-sprite');if(!sprite)continue;
-  sprite.className=`unit-sprite enemy-sprite sewer-enemy-sprite ${foe.facing==='E'?'face-east':''}`;sprite.style.backgroundImage=`url('./assets/floodworks-enemy-v2-${profile.sprite-40}.png')`;sprite.style.backgroundSize='contain';sprite.style.backgroundPosition='center bottom';
+  sprite.className=`unit-sprite enemy-sprite sewer-enemy-sprite ${profile.sprite===44?'sewer-boss-sprite':''} ${foe.facing==='E'?'face-east':''}`;sprite.style.backgroundImage=`url('./assets/floodworks-enemy-v3-${profile.sprite-40}.png')`;sprite.style.backgroundSize='contain';sprite.style.backgroundPosition='center bottom';
  }
  return result;
 };
-window.WayfarerLocationThemes=Object.freeze({version:'1.0.0',owned:[SOUTHGATE,FLOODWORKS]});
+window.WayfarerLocationThemes=Object.freeze({version:'1.1.0',owned:[SOUTHGATE,FLOODWORKS]});
 })();
+
