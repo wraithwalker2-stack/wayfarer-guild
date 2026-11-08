@@ -75,7 +75,16 @@ function completeContract(c,snapshot){
 const priorFinish=finishRun;
 if(typeof priorFinish==='function')finishRun=function(...args){const r=runState,c=mission(state.active),snapshot=r&&c&&r.dungeon?.id===c.target&&!r.failed?{party:(r.ids||[]).map(id=>heroes.find(h=>h.id===id)?.name||'Unknown adventurer')}:null;const result=priorFinish.apply(this,args);if(c&&snapshot&&!completed(c.id))completeContract(c,snapshot);return result};
 window.wayfarerContractProgress=function(){return{active:state.active,completed:state.completed.map(x=>x.id),count:state.completed.length}};
+window.WayfarerContracts=Object.freeze({
+ version:'2.0.0',
+ list:()=>CONTRACTS.map(contract=>({...contract,reward:{...contract.reward},prerequisites:[...contract.prerequisites]})),
+ mission:id=>{const contract=mission(id);return contract?{...contract,reward:{...contract.reward},prerequisites:[...contract.prerequisites]}:null},
+ state:()=>({active:state.active,completed:state.completed.map(entry=>({...entry})),day:state.day}),
+ status:id=>{const contract=mission(id);return contract?status(contract):'missing'},
+ refresh:()=>render()
+});
 function install(){const main=document.querySelector('main.main'),nav=document.querySelector('.nav');if(!main||!nav||document.getElementById('contracts'))return;main.insertAdjacentHTML('beforeend',pageMarkup());const button=document.createElement('button');button.dataset.page='contracts';button.innerHTML=`<span>${typeof guildArt==='function'?guildArt('contract','small'):'◆'}</span> Contracts`;button.onclick=showContractsPage;const jobs=nav.querySelector('[data-page="jobs"]');nav.insertBefore(button,jobs||nav.firstChild);render()}
 install();
 })();
+
 

@@ -9,8 +9,8 @@ const themes={
   battle:{name:'Hope · MintoDog',src:'https://opengameart.org/sites/default/files/hope_orchestral_battle_music_bpm165.ogg'},
   greenway:{name:'Beautiful Forest · nene',src:'https://opengameart.org/sites/default/files/beautiful_forest_16bit_44.1khz.ogg'},
   mosslight:{name:'Mysterious Orchestral Theme · nihilocrat',src:'https://opengameart.org/sites/default/files/mystery.ogg'},
-  ashen:{name:'Dungeonfire · FazeDevWater',src:'https://opengameart.org/sites/default/files/dungeonfire_1.ogg'},
-  sepulcher:{name:'Haunted Track — Minor · Gena Sealov',src:'https://opengameart.org/sites/default/files/haunted_track_minor.ogg'},
+  ashen:{name:"Hell's God · Centurion of War",src:'https://opengameart.org/sites/default/files/hells_godedit.ogg'},
+  sepulcher:{name:'Tower of the Vampire · Ragnar Random',src:'https://opengameart.org/sites/default/files/05_-_tower_of_the_vampire.ogg'},
   sewer:{name:'Whispers in the Fog · Ruhinre',src:'https://opengameart.org/sites/default/files/whispers_in_the_fog.ogg'},
   veilwake:{name:'Unsolved Investigation · isaiah658',src:'https://opengameart.org/sites/default/files/Unsolved-Investigation-isaiah658.ogg'}
 };
