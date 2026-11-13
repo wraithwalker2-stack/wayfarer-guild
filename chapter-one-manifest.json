@@ -1,6 +1,6 @@
 {
-  "release": "0.12.6-block-board",
-  "architecture": "chapter-one-consolidated-scene-battlefields",
+  "release": "0.13.0-combat-reset",
+  "architecture": "chapter-one-original-tactics-engine",
   "saveFormat": 1,
   "saveCompatibility": "0.8.x",
   "systems": [
@@ -11,7 +11,7 @@
     "equipment, market, forge, and apothecary",
     "classes, job points, skills, passives, and reactions",
     "expeditions, travel, room templates, and rewards",
-    "tactical combat, AI, objectives, terrain, sound, and statistics",
+    "original isometric tactical engine, authored boards, AI routing, terrain, and statistics",
     "codex, bestiary, politics, locations, events, and people"
   ],
   "entrypoints": {

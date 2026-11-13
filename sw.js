@@ -1,16 +1,14 @@
-const CACHE='wayfarer-public-alpha-0.12.6-block-board-1';
+const CACHE='wayfarer-public-alpha-0.13.0-combat-reset-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
-  './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js',
-  './combat-control-stability.js','./class-change-stability.js','./custom-class-art.js','./tactical-terrain.js','./tactical-objectives.js',
+  './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js',
+  './class-change-stability.js','./custom-class-art.js',
   './sewer-mission.js','./sewer-mission.css','./campaign-consequences.js','./campaign-consequences.css',
-  './holiday-system.js','./holiday-system.css','./combat-lifecycle-guard.js','./battle-integrity-v1.js',
-  './battle-content-v3.js','./battle-stage-engine-v3.js','./battle-stage-engine-v3.css','./battle-visual-engine-v2.js','./battle-visual-engine-v2.css','./guild-mark.svg','./manifest.webmanifest',
+  './holiday-system.js','./holiday-system.css','./guild-mark.svg','./manifest.webmanifest','./combat-engine-rebuild.js','./combat-engine-rebuild.css',
   './assets/music-veilwake-haunted-masquerade.mp3','./assets/music-sepulcher-mist-forest.mp3',
   './assets/battle-v2/scenes/greenway.png','./assets/battle-v2/scenes/mosslight.png','./assets/battle-v2/scenes/ashen.png',
   './assets/battle-v2/scenes/sepulcher.png','./assets/battle-v2/scenes/southgate.png','./assets/battle-v2/scenes/veilwake.png',
-  './assets/battle-v2/scenes/sewer-stage-1.png','./assets/battle-v2/scenes/sewer-stage-2.png','./assets/battle-v2/scenes/sewer-stage-3.png',
-  './assets/battle-v2/units/heroes.png','./assets/battle-v2/units/regional-enemies.png','./assets/battle-v2/units/veilwake-enemies.png'
+  './assets/battle-v2/scenes/sewer-stage-1.png','./assets/battle-v2/scenes/sewer-stage-2.png','./assets/battle-v2/scenes/sewer-stage-3.png'
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));

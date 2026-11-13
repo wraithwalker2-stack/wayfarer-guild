@@ -1,0 +1,54 @@
+/* Wayfarer original tactics board — authored isometric cells and opaque tokens. */
+#battlePanel.rebuilt-combat{position:relative;isolation:isolate;overflow:visible;background:#0b1114;color:#f5f0de;border:1px solid #4b5a5f;border-radius:14px;box-shadow:0 24px 60px #0009}
+#battlePanel.rebuilt-combat .rebuild-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;background:linear-gradient(180deg,#1a252a,#0f171b);border-bottom:1px solid #5d6b6d}
+#battlePanel.rebuilt-combat .rebuild-toolbar strong{font:700 12px 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#f4d58d;margin-right:auto}
+#battlePanel.rebuilt-combat .rebuild-toolbar button,#battlePanel.rebuilt-combat .rebuild-action{border:1px solid #607173;background:#182428;color:#f7f0dc;border-radius:7px;padding:7px 10px;font:700 11px 'DM Mono',monospace;cursor:pointer}
+#battlePanel.rebuilt-combat .rebuild-toolbar button:hover,#battlePanel.rebuilt-combat .rebuild-action:hover{background:#274045;border-color:#b7e5d2}
+#battlePanel.rebuilt-combat .rebuild-summary{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:9px 12px;background:#111a1e;border-bottom:1px solid #314248;font:11px 'DM Mono',monospace;color:#cedbd2}
+#battlePanel.rebuilt-combat .rebuild-summary .objective{color:#ffe7a7}
+#battlePanel.rebuilt-combat .rebuild-summary .danger{color:#ffb0a1}
+#battlePanel.rebuilt-combat .rebuild-main{display:grid;grid-template-columns:minmax(0,1fr) 218px;gap:10px;padding:10px;background:#091013}
+#battlePanel.rebuilt-combat .rebuild-board-frame{position:relative;min-height:660px;overflow:auto;border:1px solid #415257;border-radius:10px;background:#080d0f;scrollbar-color:#8fbaad #182125}
+#battlePanel.rebuilt-combat .rebuild-board{position:relative;width:1180px;height:700px;min-width:1180px;min-height:700px;background-color:#121b1c;background-image:linear-gradient(#070d0e55,#070d0e77),var(--rebuild-scene);background-size:100% 100%;background-position:center;background-repeat:no-repeat;overflow:hidden}
+#battlePanel.rebuilt-combat .rebuild-board:after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(115deg,#ffffff0a,transparent 34% 70%,#00000042);mix-blend-mode:soft-light}
+#battlePanel.rebuilt-combat .rebuild-cell{position:absolute;width:58px;height:38px;transform:translate(-50%,-50%);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);border:0;color:#f8f0cf;font:700 10px 'DM Mono',monospace;z-index:2;cursor:pointer;padding:0;transition:filter .12s,transform .12s,box-shadow .12s;background:linear-gradient(145deg,#71875f,#384d3d 55%,#1f3027);box-shadow:inset 0 2px 0 #d6e5b044,inset 0 -8px 12px #07100a99,0 4px 0 #07100a99}
+#battlePanel.rebuilt-combat .rebuild-cell:after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;background:linear-gradient(140deg,#ffffff1a,transparent 38% 64%,#0000003d)}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-raised{background:linear-gradient(145deg,#c9b27a,#816b48 54%,#45382c);box-shadow:inset 0 5px 0 #fff4c855,inset 0 -10px 13px #161008cc,0 11px 0 #060a0a99}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-water{background:linear-gradient(145deg,#2c929f,#14586a 55%,#0b2d3c);box-shadow:inset 0 2px 0 #ddffff88,inset 0 -9px 13px #03131fbb,0 4px 0 #061722bb}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-deep-water{background:linear-gradient(145deg,#1d4f6c,#0b263c 62%,#051521);box-shadow:inset 0 2px 0 #88d8ea33,inset 0 -12px 16px #000b14dd,0 1px 0 #000}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-bridge{background:repeating-linear-gradient(90deg,#d79a5a 0 8px,#8d5330 8px 12px);box-shadow:inset 0 3px 0 #fff0b477,inset 0 -8px 10px #2a1209bb,0 13px 0 #04090baa}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-hazard{background:linear-gradient(145deg,#b85d49,#572b2e 55%,#241621);box-shadow:inset 0 2px 0 #ffd9a344,inset 0 -9px 14px #11070fcc,0 4px 0 #05080a99}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-grass{background:linear-gradient(145deg,#81a85c,#416f3d 54%,#20402d);border-color:#b6de8b}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-void{display:none;pointer-events:none}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-deployment{outline:2px solid #8de6c3;outline-offset:-3px;box-shadow:inset 0 0 0 999px #1a9d7a33,inset 0 0 18px #a5ffe366,0 4px 0 #07100a99}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-move{outline:3px solid #d8f6ab;outline-offset:-4px;box-shadow:inset 0 0 0 999px #60b99444,0 0 18px #84f3c788,0 4px 0 #07100a99}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-target{outline:3px solid #ffb29b;outline-offset:-4px;box-shadow:inset 0 0 0 999px #bf453d55,0 0 18px #ff755e99,0 4px 0 #07100a99}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-active{outline:3px solid #ffeab0;outline-offset:-4px;filter:brightness(1.18);z-index:8}
+#battlePanel.rebuilt-combat .rebuild-cell:hover{filter:brightness(1.25);z-index:9}
+#battlePanel.rebuilt-combat .rebuild-unit{position:absolute;left:50%;top:50%;transform:translate(-50%,-62%);z-index:10;width:52px;height:64px;border-radius:20px 20px 15px 15px;border:2px solid #f8efd0;background:linear-gradient(180deg,#f4d58d 0 22%,#2b4553 23% 64%,#121a20 65%);box-shadow:0 8px 12px #000b,inset 0 1px 2px #ffffffb0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;overflow:visible;color:#fff6dc;pointer-events:none}
+#battlePanel.rebuilt-combat .rebuild-unit:before{content:'';position:absolute;top:6px;width:22px;height:22px;border-radius:50%;background:linear-gradient(145deg,#fff1bf,#bf8a5e);border:1px solid #2e2521;box-shadow:0 2px 4px #0008}
+#battlePanel.rebuilt-combat .rebuild-unit:after{content:'';position:absolute;bottom:-7px;width:34px;height:7px;border-radius:50%;background:#0009;filter:blur(2px)}
+#battlePanel.rebuilt-combat .rebuild-unit.enemy{background:linear-gradient(180deg,#bd5c55 0 22%,#632b3b 23% 64%,#1e1420 65%);border-color:#ffb5a9}
+#battlePanel.rebuilt-combat .rebuild-unit.enemy:before{background:linear-gradient(145deg,#f4c7a8,#8c4838)}
+#battlePanel.rebuilt-combat .rebuild-unit.boss{width:68px;height:80px;border-width:3px;box-shadow:0 10px 18px #000c,inset 0 1px 3px #fff9}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-mark{font-size:18px;line-height:18px;z-index:2;text-shadow:0 1px 3px #000}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-name{position:absolute;top:-19px;white-space:nowrap;color:#fff9e8;text-shadow:0 2px 4px #000;font:700 10px 'DM Mono',monospace;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-hp{position:absolute;top:-8px;width:56px;height:5px;background:#241b1d;border:1px solid #0b0e0f;border-radius:5px;overflow:hidden;transform:translateY(-100%)}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-hp i{display:block;height:100%;background:linear-gradient(90deg,#69f19e,#c5ff9d)}
+#battlePanel.rebuilt-combat .rebuild-unit.enemy .unit-hp i{background:linear-gradient(90deg,#ff6e62,#ffcc8b)}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-hp small{display:none}
+#battlePanel.rebuilt-combat .rebuild-sidebar{min-height:660px;border:1px solid #33464b;border-radius:10px;background:linear-gradient(180deg,#17242a,#0e1519);padding:10px;overflow:auto}
+#battlePanel.rebuilt-combat .rebuild-sidebar h3{margin:0 0 8px;font:700 12px 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#ffe0a0}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card{display:flex;gap:7px;align-items:center;padding:7px;margin:5px 0;border:1px solid #ffffff17;border-radius:8px;background:#ffffff08;cursor:pointer;color:#eef6e9;font:10px 'DM Mono',monospace}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.active{border-color:#ffe7a0;background:#b8924e22}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy{border-color:#ff846a44}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-token{width:26px;height:30px;border-radius:10px 10px 7px 7px;background:linear-gradient(180deg,#f0d28f 0 28%,#294a57 29% 100%);border:1px solid #f8efd0;flex:0 0 auto}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy .unit-token{background:linear-gradient(180deg,#c15b55 0 28%,#62283a 29% 100%);border-color:#ffb5a9}
+#battlePanel.rebuilt-combat .unit-card small{display:block;color:#bcd0c6;margin-top:2px}
+#battlePanel.rebuilt-combat .rebuild-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+#battlePanel.rebuilt-combat .rebuild-actions .rebuild-action.primary{background:#8d623d;border-color:#f0c788;color:#fff3d2}
+#battlePanel.rebuilt-combat .rebuild-actions .rebuild-action.warn{background:#6f332f;border-color:#ffac98}
+#battlePanel.rebuilt-combat .rebuild-log{margin-top:10px;padding:8px;border-left:3px solid #d6a15c;background:#0a1114;color:#cfded2;font:10px/1.45 'DM Mono',monospace;min-height:56px}
+#battlePanel.rebuilt-combat .rebuild-deployment{padding:10px 12px;border-top:1px solid #33464b;background:#111b1f;font:11px 'DM Mono',monospace;color:#d7e9db}
+#battlePanel.rebuilt-combat .rebuild-deployment strong{color:#ffe7a7}
+@media(max-width:1000px){#battlePanel.rebuilt-combat .rebuild-main{grid-template-columns:1fr}#battlePanel.rebuilt-combat .rebuild-sidebar{min-height:0;max-height:290px}}
