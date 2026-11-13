@@ -89,6 +89,7 @@
   window.beginBattle = function (room) { setupBattle(room); };
   window.beginBattleRebuilt = window.beginBattle;
   window.renderBattle = function () { normalizeDeployment(getRun()?.battle); return render(); };
+  window.handleRebuiltAction = handleAction;
   window.battleClick = (x, y) => handleCell(Number(x), Number(y));
   window.endBattleHero = endTurn;
   window.startHeroRound = () => { const b = getRun()?.battle; if (!b) return; b.turn = 'heroes'; b.round++; b.heroes.forEach(u => { u.done = false; u.moved = false; u.acted = false; u.ap = 2; }); refresh(); };

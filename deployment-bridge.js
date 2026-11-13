@@ -16,6 +16,19 @@
     } catch (_) {}
   }
 
+  window.wayfarerRebuildSelect = function (id) {
+    const battle = battleState();
+    if (!battle) return;
+    battle.selectedId = String(id);
+    refreshBoard();
+  };
+  window.wayfarerRebuildCell = function (x, y) {
+    if (typeof window.battleClick === 'function') window.battleClick(Number(x), Number(y));
+  };
+  window.wayfarerRebuildAction = function (action) {
+    if (typeof window.handleRebuiltAction === 'function') return window.handleRebuiltAction(action);
+  };
+
   document.addEventListener('click', function (event) {
     const element = event.target?.closest?.('#battlePanel [data-select], #battlePanel .rebuild-cell');
     if (!element) return;
@@ -25,8 +38,7 @@
     event.stopPropagation();
 
     if (element.matches('[data-select]')) {
-      battle.selectedId = String(element.dataset.select);
-      refreshBoard();
+      window.wayfarerRebuildSelect(element.dataset.select);
       return;
     }
 
