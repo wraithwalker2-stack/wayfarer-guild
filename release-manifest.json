@@ -1,7 +1,7 @@
 {
-  "release": "0.9.11-alpha.3",
-  "architecture": "chapter-one-consolidated",
-  "generatedAt": "2026-11-07T05:44:31.807Z",
+  "release": "0.12.0-battle-visual-reset",
+  "architecture": "chapter-one-consolidated-scene-battlefields",
+  "generatedAt": "2026-11-13T03:30:00-06:00",
   "files": 189,
   "bytes": 99684311,
   "bundledStyles": 56,

@@ -1,6 +1,6 @@
 {
-  "release": "0.9.10-alpha",
-  "architecture": "chapter-one-consolidated",
+  "release": "0.12.0-battle-visual-reset",
+  "architecture": "chapter-one-consolidated-scene-battlefields",
   "saveFormat": 1,
   "saveCompatibility": "0.8.x",
   "systems": [
