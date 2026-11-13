@@ -23,6 +23,7 @@ async function flow(){
  try{
   document.querySelector('.founder-intro')?.remove();
   check('Engine boot',window.WayfarerEngine?.boot.phase==='ready',window.WayfarerEngine?.version||'missing');
+  check('Complete reset authority',typeof window.resetGame==='function'&&typeof window.WayfarerEngine?.save?.resetAll==='function'&&typeof window.WayfarerRecoveryV4?.resetGameData==='function','final reset handler and engine storage reset are installed');
   check('Five current job postings',typeof jobs!=='undefined'&&jobs.length===5,`count ${typeof jobs!=='undefined'?jobs.length:'missing'}`);
   check('Expanded job catalogue',typeof jobPool!=='undefined'&&jobPool.length>=20,`count ${typeof jobPool!=='undefined'?jobPool.length:'missing'}`);
   const before=activeJobs.length;takeJob(jobs[0].id);const pick=document.querySelector('#jobPicks input');if(pick)pick.checked=true;confirmJob();check('Job dispatch',activeJobs.length===before+1,`before ${before}, after ${activeJobs.length}`);activeJobs.splice(before);save();renderJobs();
@@ -35,19 +36,30 @@ async function flow(){
   check('Combat mechanics',typeof beginBattle==='function'&&typeof resolveBattleInstant==='function'&&!!window.WayfarerCombatV3,window.WayfarerCombatV3?.version||'missing');
   const team=heroes.slice(0,5);team.forEach(hero=>{hero.level=Math.max(10,hero.level||1);hero.hp=hero.maxHp});window.wayfarerTravel?.startLocal?.('greenway',team,'ai');resolveRoom('forward');if(runState?.battle)resolveBattleInstant();await new Promise(resolve=>setTimeout(resolve,1200));const combatFinished=!runState||(!runState.battle&&runState.step>=1);check('AI combat resolution',combatFinished,runState?`room ${runState.step}, battle ${!!runState.battle}`:'one-room encounter completed');runState=null;document.getElementById('run')?.classList.remove('show');
   check('Sewer ownership',window.WayfarerLocationThemes?.owned?.includes('sewer'),'location-owned terrain and enemies');
-  const image=new Image();image.src='./assets/floodworks-terrain-atlas-v2.jpg';await new Promise(resolve=>{image.onload=resolve;image.onerror=resolve;setTimeout(resolve,2500)});check('Sewer terrain atlas',image.complete&&image.naturalWidth>0,`${image.naturalWidth} × ${image.naturalHeight}`);
+  const image=new Image();image.src='./assets/floodworks-cobble-atlas-v3.jpg';await new Promise(resolve=>{image.onload=resolve;image.onerror=resolve;setTimeout(resolve,2500)});check('Sewer cobblestone atlas',image.complete&&image.naturalWidth>0,`${image.naturalWidth} × ${image.naturalHeight}`);
  }catch(error){results.push({name:'Audit execution',pass:false,detail:error.stack||error.message})}
  return{passed:results.filter(item=>item.pass).length,failed:results.filter(item=>!item.pass).length,results,snapshot:snapshot()}
 }
-window.WayfarerRecoveryAudit={snapshot,flow};
+async function sewerPreview(){
+ document.querySelector('.founder-intro')?.remove();
+ while(heroes.length<5){const base=heroes[heroes.length-1]||heroes[0],copy=JSON.parse(JSON.stringify(base));copy.id=Date.now()+heroes.length;copy.name=`Terrain Scout ${heroes.length+1}`;heroes.push(copy)}
+ const team=heroes.slice(0,5);team.forEach(hero=>{hero.level=Math.max(8,hero.level||1);hero.hp=hero.maxHp});
+ renderTeam();window.wayfarerTravel?.startLocal?.('sewer',team,'manual');resolveRoom('forward');document.getElementById('run')?.classList.add('show');renderRun();
+ return {dungeon:runState?.dungeon?.id,battlefield:runState?.battle?.battlefieldId,channels:runState?.battle?.sewerChannel?.length||0,bridges:runState?.battle?.sewerBridges?.length||0};
+}
+function resetPreview(){
+ localStorage.setItem('wayfarer-reset-audit','sentinel');localStorage.setItem('wayfarer-founder-v1','{"name":"Reset Audit"}');
+ const removed=window.WayfarerRecoveryV4?.resetGameData?.({reload:false,confirm:false})||[];
+ return {passed:localStorage.getItem('wayfarer-reset-audit')===null&&localStorage.getItem('wayfarer-founder-v1')===null,removed:removed.length,handler:window.resetGame===window.resetGame&&typeof window.resetGame};
+}
+window.WayfarerRecoveryAudit={snapshot,flow,sewerPreview,resetPreview};
 if(new URLSearchParams(location.search).has('audit')){
  setTimeout(async()=>{
   const node=document.createElement('pre');
   node.id='wayfarerAudit';
   node.style.cssText='position:fixed;z-index:99999;inset:auto 10px 10px 10px;max-height:45vh;overflow:auto;background:#090d0a;color:#d8f5d0;padding:12px;white-space:pre-wrap';
-  node.textContent=JSON.stringify(new URLSearchParams(location.search).get('audit')==='flow'?await flow():snapshot(),null,2);
+  const mode=new URLSearchParams(location.search).get('audit');node.textContent=JSON.stringify(mode==='flow'?await flow():mode==='sewer'?await sewerPreview():mode==='reset'?resetPreview():snapshot(),null,2);
   document.body.append(node);
  },250);
 }
 })();
-

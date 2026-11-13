@@ -3,7 +3,7 @@
 
   const RELEASE = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.11.0-recovery',
+  version: '0.11.1-terrain-rebuild',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];
@@ -128,5 +128,4 @@
   window.WAYFARER_RELEASE = RELEASE;
   installReleaseTools();
 })();
-
 

@@ -14,6 +14,14 @@ function report(error,context='runtime'){const item={context,message:error?.mess
 function read(key,fallback=null){try{const raw=localStorage.getItem(key);return raw===null?fallback:JSON.parse(raw)}catch(error){report(error,`read:${key}`);return fallback}}
 function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));global.dispatchEvent(new CustomEvent('wayfarer:save-changed',{detail:{key}}));return true}catch(error){report(error,`write:${key}`);return false}}
 function transaction(work){const snapshot={};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);snapshot[key]=localStorage.getItem(key)}try{return work()}catch(error){localStorage.clear();for(const [key,value]of Object.entries(snapshot))localStorage.setItem(key,value);report(error,'transaction');throw error}}
+function isGameStorageKey(key){return typeof key==='string'&&(key.startsWith('wayfarer-')||key==='guild-sfx')}
+function resetAll(){
+ const removed=[];
+ for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(isGameStorageKey(key)){removed.push(key);localStorage.removeItem(key)}}
+ try{sessionStorage.removeItem('wayfarer-last-error')}catch{}
+ global.dispatchEvent(new CustomEvent('wayfarer:save-reset',{detail:{removed}}));
+ return removed;
+}
 function baseJobFor(origin){return DATA.originJobs[origin]||'Squire'}
 function statsFor(job){return clone(DATA.baseStats[job]||DATA.baseStats.Squire)}
 function derive(stats){return{maxHp:20+stats.constitution*2,power:2+Math.floor(stats.strength/2)+Math.floor(stats.intelligence/4),armor:Math.floor(stats.constitution/4),staminaMax:3+Math.floor((stats.strength+stats.constitution)/12)}}
@@ -31,9 +39,8 @@ function register(name,version='1.0.0',api=null){if(!name)return false;modules.s
 function whenReady(){return boot.phase==='ready'?Promise.resolve(engine):new Promise(resolve=>waiters.push(resolve))}
 function when(phase='ready'){return phase==='ready'?whenReady():Promise.resolve(engine)}
 function setReady(){if(boot.phase==='ready')return;boot.phase='ready';boot.readyAt=Date.now();waiters.splice(0).forEach(resolve=>resolve(engine));global.dispatchEvent(new CustomEvent('wayfarer:engine-ready',{detail:{engine}}))}
-const engine=Object.freeze({version:'3.0.0',build:'0.11.0-recovery-rebuild',data:DATA,characters:Object.freeze({baseJobFor,statsFor,derive,equipment,initialize:initializeCharacter,createFounder}),save:Object.freeze({read,write,transaction}),modules:Object.freeze({register,get:(name)=>modules.get(name)?.api||null,get list(){return[...modules.values()].map(({api,...item})=>item)}}),boot:Object.freeze({get phase(){return boot.phase},get startedAt(){return boot.startedAt},get readyAt(){return boot.readyAt},whenReady,when,register}),diagnostics:Object.freeze({report,get errors(){return clone(errors)}}),report});
+const engine=Object.freeze({version:'3.0.1',build:'0.11.1-reset-terrain-rebuild',data:DATA,characters:Object.freeze({baseJobFor,statsFor,derive,equipment,initialize:initializeCharacter,createFounder}),save:Object.freeze({read,write,transaction,isGameStorageKey,resetAll}),modules:Object.freeze({register,get:(name)=>modules.get(name)?.api||null,get list(){return[...modules.values()].map(({api,...item})=>item)}}),boot:Object.freeze({get phase(){return boot.phase},get startedAt(){return boot.startedAt},get readyAt(){return boot.readyAt},whenReady,when,register}),diagnostics:Object.freeze({report,get errors(){return clone(errors)}}),report});
 global.WayfarerEngine=engine;global.WAYFARER_ORIGIN_JOBS=DATA.originJobs;global.WAYFARER_BASE_STATS=DATA.baseStats;
 global.addEventListener('error',event=>report(event.error||event.message,'window'));global.addEventListener('unhandledrejection',event=>report(event.reason,'promise'));
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setReady,{once:true});else queueMicrotask(setReady);
 })(window);
-

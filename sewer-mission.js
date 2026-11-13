@@ -49,16 +49,15 @@ function showContact(continueRun){
  function launchLocalRun(){const party=[...document.querySelectorAll('#team input:checked')].map(x=>heroes.find(h=>h.id===Number(x.value))).filter(Boolean),mode=document.querySelector('input[name="mode"]:checked')?.value||'manual';if(party.length!==5)return toast(`Choose exactly 5 adventurers (${party.length} selected).`);if(window.wayfarerTravel?.startLocal)return window.wayfarerTravel.startLocal(DUNGEON_ID,party,mode);return priorStart()}
  let contactAccepted=false;const priorStart=startRun;startRun=function(...args){if(selectedDungeon!==DUNGEON_ID)return priorStart.apply(this,args);const selected=document.querySelectorAll('#team input:checked').length;if(selected!==5)return priorStart.apply(this,args);if(contractActive()&&!contactAccepted)return showContact(()=>{contactAccepted=true;launchLocalRun()});return launchLocalRun()};
 
-function channelPath(b){
- const points=templatePoints(()=>true,b),top=Math.min(...points.map(p=>p.y)),bottom=Math.max(...points.map(p=>p.y)),center=Math.floor(FIELD_W/2),starts=points.filter(p=>p.y===top).sort((a,c)=>Math.abs(a.x-center)-Math.abs(c.x-center)),goals=new Set(points.filter(p=>p.y===bottom).map(p=>key(p.x,p.y))),queue=starts.map(p=>({p,path:[p]})),seen=new Set(starts.map(p=>key(p.x,p.y)));
+function channelPath(b,targetX=Math.floor(FIELD_W/2)){
+ const points=templatePoints(()=>true,b),top=Math.min(...points.map(p=>p.y)),bottom=Math.max(...points.map(p=>p.y)),starts=points.filter(p=>p.y===top).sort((a,c)=>Math.abs(a.x-targetX)-Math.abs(c.x-targetX)).slice(0,1),goals=new Set(points.filter(p=>p.y===bottom).map(p=>key(p.x,p.y))),queue=starts.map(p=>({p,path:[p]})),seen=new Set(starts.map(p=>key(p.x,p.y)));
  while(queue.length){const cur=queue.shift();if(goals.has(key(cur.p.x,cur.p.y)))return cur.path;for(const [dx,dy] of [[0,1],[1,0],[-1,0],[0,-1]]){const n={x:cur.p.x+dx,y:cur.p.y+dy},k=key(n.x,n.y);if(!seen.has(k)&&roomTileExists(b,n.x,n.y)){seen.add(k);queue.push({p:n,path:[...cur.path,n]})}}}return points.filter(p=>p.x===center);
 }
 function applySewerTerrain(b){
- b.tileTerrain={};b.enemyWarnings=b.enemyWarnings||[];b.sporeClouds=b.sporeClouds||[];const path=channelPath(b);
- for(const p of path)b.tileTerrain[key(p.x,p.y)]={type:'water',name:'Deep flood channel'};
- const bridgeIndexes=[Math.floor(path.length*.25),Math.floor(path.length*.55),Math.floor(path.length*.82)];
- for(const i of bridgeIndexes){const p=path[Math.max(0,Math.min(path.length-1,i))];if(p)b.tileTerrain[key(p.x,p.y)]={type:'bridge',name:'Timber channel bridge'}}
- const candidates=shuffledRoomPoints(templatePoints((x,y)=>!b.tileTerrain[key(x,y)]&&!livingUnitAt(b,x,y)&&path.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)===1),b));for(const p of candidates.slice(0,3))b.tileTerrain[key(p.x,p.y)]={type:'hazard',name:'Caustic runoff',damage:4};b.sewerChannel=path.map(p=>key(p.x,p.y));b.sewerBridges=bridgeIndexes.map(i=>path[i]).filter(Boolean).map(p=>key(p.x,p.y));
+ b.tileTerrain={};b.enemyWarnings=b.enemyWarnings||[];b.sporeClouds=b.sporeClouds||[];const paths=[channelPath(b,Math.floor(FIELD_W*.36)),channelPath(b,Math.floor(FIELD_W*.68))],all=paths.flat();
+ for(const p of all)b.tileTerrain[key(p.x,p.y)]={type:'water',name:'Deep flood channel'};
+ const bridges=[];for(const [pathIndex,path] of paths.entries()){const fractions=pathIndex? [.28,.7]:[.42,.82];for(const fraction of fractions){const p=path[Math.max(0,Math.min(path.length-1,Math.floor(path.length*fraction)))];if(p){b.tileTerrain[key(p.x,p.y)]={type:'bridge',name:'Timber channel bridge'};bridges.push(p)}}}
+ const candidates=shuffledRoomPoints(templatePoints((x,y)=>!b.tileTerrain[key(x,y)]&&!livingUnitAt(b,x,y)&&all.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)===1),b));for(const p of candidates.slice(0,3))b.tileTerrain[key(p.x,p.y)]={type:'hazard',name:'Caustic runoff',damage:4};b.sewerChannel=all.map(p=>key(p.x,p.y));b.sewerBridges=bridges.map(p=>key(p.x,p.y));
 }
 function installSewerEnemies(b,room){
  const stage=room?.sewerStage||Math.min(3,(runState?.step||0)+1),packs={1:['sewer_rat','sewer_rat','sewer_slime','caustic_slime'],2:['plague_rat','sewer_rat','sewer_slime','sewer_slime','caustic_slime'],3:['sludge_devourer','plague_rat','sewer_slime','caustic_slime','sewer_rat']},keys=packs[stage]||packs[1],avg=runState.ids.reduce((n,id)=>n+(heroes.find(h=>h.id===id)?.level||1),0)/runState.ids.length,level=Math.max(2,Math.round(avg)+stage-1);
@@ -97,5 +96,4 @@ const priorFinish=finishRun;finishRun=function(...args){const r=runState,active=
 const priorCodex=renderCodex;renderCodex=function(...args){const result=priorCodex(...args),groups=document.querySelectorAll('.bestiary-filter-group');if(groups[0]&&!groups[0].querySelector('[data-sewer-filter]'))groups[0].insertAdjacentHTML('beforeend',`<button data-sewer-filter class="${typeof bestiaryFilters!=='undefined'&&bestiaryFilters.dungeon==='sewer'?'selected':''}" onclick="setBestiaryFilter('dungeon','sewer')">Floodworks</button>`);return result};
 updateDungeonChoices();renderCodex();
 })();
-
 

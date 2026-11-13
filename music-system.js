@@ -1,4 +1,4 @@
-/* Location-aware CC0 orchestral-fantasy score for Wayfarer Guild. */
+/* Location-aware orchestral-fantasy score for Wayfarer Guild. See AUDIO_CREDITS.md. */
 (function(){
 'use strict';
 const KEY='wayfarer-music-v1';
@@ -10,9 +10,9 @@ const themes={
   greenway:{name:'Beautiful Forest · nene',src:'https://opengameart.org/sites/default/files/beautiful_forest_16bit_44.1khz.ogg'},
   mosslight:{name:'Mysterious Orchestral Theme · nihilocrat',src:'https://opengameart.org/sites/default/files/mystery.ogg'},
   ashen:{name:"Hell's God · Centurion of War",src:'https://opengameart.org/sites/default/files/hells_godedit.ogg'},
-  sepulcher:{name:'Tower of the Vampire · Ragnar Random',src:'https://opengameart.org/sites/default/files/05_-_tower_of_the_vampire.ogg'},
+  sepulcher:{name:'Radakan – Mist Forest · Janne Hanhisuanto',src:'./assets/music-sepulcher-mist-forest.mp3'},
   sewer:{name:'Whispers in the Fog · Ruhinre',src:'https://opengameart.org/sites/default/files/whispers_in_the_fog.ogg'},
-  veilwake:{name:'Unsolved Investigation · isaiah658',src:'https://opengameart.org/sites/default/files/Unsolved-Investigation-isaiah658.ogg'}
+  veilwake:{name:'Dark Gothic Haunted Masquerade · ISAo',src:'./assets/music-veilwake-haunted-masquerade.mp3'}
 };
 const player=new Audio();player.loop=true;player.preload='auto';player.volume=0;let currentMood='guild',started=false,timer=null,fadeTimer=null;
 function saveSettings(){localStorage.setItem(KEY,JSON.stringify(settings))}
@@ -48,7 +48,6 @@ mount();document.addEventListener('pointerdown',unlock,{capture:true,passive:tru
 if(!timer)timer=setInterval(syncMood,800);
 const previousRenderAll=window.renderAll;window.renderAll=function(...args){const result=previousRenderAll.apply(this,args);mount();syncMood();return result};
 player.addEventListener('error',()=>{started=false;updateUi()});
-window.WayfarerMusic=Object.freeze({version:'3.4.0',start,toggle,setVolume,duck,sync:syncMood,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
+window.WayfarerMusic=Object.freeze({version:'3.5.0',start,toggle,setVolume,duck,sync:syncMood,get enabled(){return settings.enabled},get volume(){return settings.volume},get mood(){return currentMood},get state(){return started&&!player.paused?'playing':'paused'},get started(){return started}});
 })();
-
 
