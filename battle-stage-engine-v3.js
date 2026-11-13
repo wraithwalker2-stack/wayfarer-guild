@@ -10,6 +10,8 @@
   const key = (x, y) => `${x},${y}`;
   const inside = (x, y) => x >= 1 && x <= 19 && y >= 1 && y <= 19;
   const rect = (x, y, x1, y1, x2, y2) => x >= x1 && x <= x2 && y >= y1 && y <= y2;
+  const currentRun = () => { try { return runState; } catch (_) { return window.runState; } };
+  const currentHeroes = () => { try { return heroes; } catch (_) { return window.heroes || []; } };
 
   /* Keep the complete 21x21 board inside the painted scene. The same
      projection is used for cells, sprites, health bars, and effects. */
@@ -107,21 +109,21 @@
   }
 
   const oldBegin = window.beginBattle;
-  window.beginBattle = function (...args) { const result = typeof oldBegin === 'function' ? oldBegin.apply(this, args) : undefined; const r = window.runState, b = r?.battle; if (b) { applyStage(r, b); if (typeof renderRun === 'function') renderRun(); } return result; };
+  window.beginBattle = function (...args) { const result = typeof oldBegin === 'function' ? oldBegin.apply(this, args) : undefined; const r = currentRun(), b = r?.battle; if (b) { applyStage(r, b); if (typeof renderRun === 'function') renderRun(); } return result; };
   const oldClick = window.battleClick;
-  window.battleClick = function (x, y) { const b = window.runState?.battle; if (b?.roomTiles && !b.roomTiles[y * (b.width || WIDTH) + x]) return typeof toast === 'function' ? toast('That part of the board is not traversable.') : undefined; return typeof oldClick === 'function' ? oldClick(x, y) : undefined; };
+  window.battleClick = function (x, y) { const b = currentRun()?.battle; if (b?.roomTiles && !b.roomTiles[y * (b.width || WIDTH) + x]) return typeof toast === 'function' ? toast('That part of the board is not traversable.') : undefined; return typeof oldClick === 'function' ? oldClick(x, y) : undefined; };
 
   const oldReachable = window.reachableTiles;
   window.reachableTiles = function (actor) {
-    const b = window.runState?.battle; if (!b || !actor) return typeof oldReachable === 'function' ? oldReachable(actor) : [];
-    const hero = heroes.find(h => h.id === actor.id), max = Math.max(1, Number(moveRange(hero) || 1)), queue = [{ x: actor.x, y: actor.y, d: 0 }], seen = new Set([key(actor.x, actor.y)]), out = [];
-    while (queue.length) { const p = queue.shift(); if (p.d >= max) continue; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const x = p.x + dx, y = p.y + dy, k = key(x, y); if (!passable(b, x, y) || seen.has(k) || b.heroes.some(u => u.id !== actor.id && u.x === x && u.y === y && heroes.find(h => h.id === u.id)?.hp > 0) || b.foes.some(f => f.hp > 0 && f.x === x && f.y === y)) continue; seen.add(k); out.push({ x, y }); queue.push({ x, y, d: p.d + 1 }); } }
+    const b = currentRun()?.battle; if (!b || !actor) return typeof oldReachable === 'function' ? oldReachable(actor) : [];
+    const hero = currentHeroes().find(h => h.id === actor.id), max = Math.max(1, Number(moveRange(hero) || 1)), queue = [{ x: actor.x, y: actor.y, d: 0 }], seen = new Set([key(actor.x, actor.y)]), out = [];
+    while (queue.length) { const p = queue.shift(); if (p.d >= max) continue; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const x = p.x + dx, y = p.y + dy, k = key(x, y); if (!passable(b, x, y) || seen.has(k) || b.heroes.some(u => u.id !== actor.id && u.x === x && u.y === y && currentHeroes().find(h => h.id === u.id)?.hp > 0) || b.foes.some(f => f.hp > 0 && f.x === x && f.y === y)) continue; seen.add(k); out.push({ x, y }); queue.push({ x, y, d: p.d + 1 }); } }
     return out;
   };
   const oldRoute = window.enemyRouteToAdjacent;
   window.enemyRouteToAdjacent = function (foe, target, b) {
     if (!b) return typeof oldRoute === 'function' ? oldRoute(foe, target, b) : [];
-    const blocked = (x, y) => !passable(b, x, y) || b.heroes.some(u => u.x === x && u.y === y && heroes.find(h => h.id === u.id)?.hp > 0) || b.foes.some(f => f !== foe && f.hp > 0 && f.x === x && f.y === y), queue = [{ x: foe.x, y: foe.y, path: [] }], seen = new Set([key(foe.x, foe.y)]);
+    const blocked = (x, y) => !passable(b, x, y) || b.heroes.some(u => u.x === x && u.y === y && currentHeroes().find(h => h.id === u.id)?.hp > 0) || b.foes.some(f => f !== foe && f.hp > 0 && f.x === x && f.y === y), queue = [{ x: foe.x, y: foe.y, path: [] }], seen = new Set([key(foe.x, foe.y)]);
     for (let i = 0; i < queue.length; i++) { const cur = queue[i]; if (distance(cur, target) <= 1 && cur.path.length) return cur.path; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const x = cur.x + dx, y = cur.y + dy, k = key(x, y); if (seen.has(k) || blocked(x, y)) continue; seen.add(k); queue.push({ x, y, path: [...cur.path, { x, y }] }); } }
     return [];
   };
@@ -130,12 +132,12 @@
 
   const oldRender = window.renderBattle;
   window.renderBattle = function (...args) {
-    const result = typeof oldRender === 'function' ? oldRender.apply(this, args) : undefined, b = window.runState?.battle, panel = document.getElementById('battlePanel'), grid = panel?.querySelector('.battlegrid');
+    const result = typeof oldRender === 'function' ? oldRender.apply(this, args) : undefined, b = currentRun()?.battle, panel = document.getElementById('battlePanel'), grid = panel?.querySelector('.battlegrid');
     if (!b?.stageGeometry || !grid) return result;
     panel.classList.add('stage-geometry-v3', 'block-board-v4', 'authored-room'); panel.dataset.stageGeometry = b.stageGeometry; grid.classList.add('stage-geometry-grid'); grid.style.width = '1200px'; grid.style.height = '675px'; grid.style.setProperty('--bv2-scene-scale', '100% 100%'); grid.style.setProperty('--bv2-scene-position', '50% 50%');
     for (let y = 0; y < HEIGHT; y++) for (let x = 0; x < WIDTH; x++) { const cell = grid.children[y * WIDTH + x]; if (!cell) continue; const i = y * WIDTH + x, h = b.elevations?.[i] || 0, p = projected(x, y, h), open = !!b.roomTiles?.[i], terrain = b.tileTerrain?.[key(x, y)]?.type, tile = b.tileKinds?.[key(x, y)] || '.'; cell.style.left = `${p.sx}%`; cell.style.top = `${p.sy}%`; cell.style.transform = 'translate(-50%,-50%)'; cell.style.zIndex = String(Math.round(p.sy * 10) + h); cell.classList.toggle('void-cell', !open); cell.classList.remove('stage-floor', 'stage-raised', 'stage-water', 'stage-shallow-water', 'stage-deep-water', 'stage-bridge', 'stage-hazard', 'stage-tall-grass'); cell.classList.add(terrainClass(terrain || (tile === '^' ? 'raised' : tile === '=' ? 'bridge' : tile === '!' ? 'hazard' : tile === '~' ? 'shallow-water' : 'floor'))); if (!open) { cell.disabled = true; cell.setAttribute('aria-hidden', 'true'); } else { cell.disabled = false; cell.removeAttribute('aria-hidden'); } }
-    const vitals = grid.querySelector('.overhead-vitals-layer'); if (vitals) { const pxW = grid.clientWidth || 1200, pxH = grid.clientHeight || 675, place = (nodes, units) => nodes.forEach((node, i) => { const unit = units[i]; if (!unit) return; const p = projected(unit.x, unit.y, b.elevations?.[unit.y * WIDTH + unit.x] || 0); node.style.left = `${p.sx / 100 * pxW - 28}px`; node.style.top = `${p.sy / 100 * pxH - 48}px`; node.style.width = '56px'; }); place([...vitals.querySelectorAll('.party-vitals')], b.heroes.filter(u => (heroes.find(h => h.id === u.id)?.hp || 0) > 0)); place([...vitals.querySelectorAll('.enemy-vitals')], b.foes.filter(u => u.hp > 0)); }
+    const vitals = grid.querySelector('.overhead-vitals-layer'); if (vitals) { const pxW = grid.clientWidth || 1200, pxH = grid.clientHeight || 675, place = (nodes, units) => nodes.forEach((node, i) => { const unit = units[i]; if (!unit) return; const p = projected(unit.x, unit.y, b.elevations?.[unit.y * WIDTH + unit.x] || 0); node.style.left = `${p.sx / 100 * pxW - 28}px`; node.style.top = `${p.sy / 100 * pxH - 48}px`; node.style.width = '56px'; }); place([...vitals.querySelectorAll('.party-vitals')], b.heroes.filter(u => (currentHeroes().find(h => h.id === u.id)?.hp || 0) > 0)); place([...vitals.querySelectorAll('.enemy-vitals')], b.foes.filter(u => u.hp > 0)); }
     panel.querySelectorAll('.rotate-left,.rotate-right,.camera-angle').forEach(button => { button.disabled = true; button.hidden = true; }); return result;
   };
-  window.WayfarerStageEngine = Object.freeze({ version: '4.0.0', maps: Object.keys(MAPS), audit() { const b = window.runState?.battle; return b ? { map: b.stageGeometry, width: b.width, height: b.height, walkable: b.roomTiles?.filter(Boolean).length || 0, heroes: b.heroes.map(u => [u.x, u.y]), foes: b.foes.filter(f => f.hp > 0).map(u => [u.x, u.y]) } : { state: 'idle' }; } });
+  window.WayfarerStageEngine = Object.freeze({ version: '4.0.0', maps: Object.keys(MAPS), audit() { const b = currentRun()?.battle; return b ? { map: b.stageGeometry, width: b.width, height: b.height, walkable: b.roomTiles?.filter(Boolean).length || 0, heroes: b.heroes.map(u => [u.x, u.y]), foes: b.foes.filter(f => f.hp > 0).map(u => [u.x, u.y]) } : { state: 'idle' }; } });
 })();
