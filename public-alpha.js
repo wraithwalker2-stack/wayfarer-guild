@@ -3,7 +3,7 @@
 
   const RELEASE = Object.freeze({
     name: 'Wayfarer Guild',
-  version: '0.11.1-terrain-rebuild',
+    version: '0.11.3-isometric-enemies',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];
