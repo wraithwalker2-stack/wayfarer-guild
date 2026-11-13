@@ -8,7 +8,7 @@ const SHELL=[
   './assets/music-veilwake-haunted-masquerade.mp3','./assets/music-sepulcher-mist-forest.mp3',
   './assets/battle-v2/scenes/greenway.png','./assets/battle-v2/scenes/mosslight.png','./assets/battle-v2/scenes/ashen.png',
   './assets/battle-v2/scenes/sepulcher.png','./assets/battle-v2/scenes/southgate.png','./assets/battle-v2/scenes/veilwake.png',
-  './assets/battle-v2/scenes/sewer-stage-1.png','./assets/battle-v2/scenes/sewer-stage-2.png','./assets/battle-v2/scenes/sewer-stage-3.png'
+  './assets/battle-v2/scenes/sewer-stage-1.png','./assets/battle-v2/scenes/sewer-stage-2.png','./assets/battle-v2/scenes/sewer-stage-3.png', './deployment-bridge.js'
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
