@@ -1,5 +1,5 @@
 {
-  "release": "0.12.4-health-fit",
+  "release": "0.12.5-target-hints",
   "architecture": "chapter-one-consolidated-scene-battlefields",
   "saveFormat": 1,
   "saveCompatibility": "0.8.x",
@@ -21,6 +21,7 @@
     "campaign": "ordered browser modules"
   }
 }
+
 
 
 

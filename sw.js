@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.12.4-health-fit-1';
+const CACHE='wayfarer-public-alpha-0.12.5-target-hints-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js',
@@ -23,5 +23,6 @@ self.addEventListener('fetch',event=>{
   }
   event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response}).catch(()=>caches.match(event.request).then(hit=>hit||caches.match('./index.html'))));
 });
+
 
 

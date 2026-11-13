@@ -3,6 +3,9 @@
 #battlePanel.stage-geometry-v3 .battlegrid .iso-cell{position:absolute!important;margin:0!important}
 #battlePanel.stage-geometry-v3 .dungeon-scene,#battlePanel.stage-geometry-v3 .mosslight-scene{display:none!important}
 #battlePanel.stage-geometry-v3 .battlegrid .battlecell,#battlePanel.stage-geometry-v3 .battlegrid .battlecell.empty{background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+#battlePanel.stage-geometry-v3 .battlegrid .battlecell.reachable{background:#63b9a322!important;border:2px solid #8de0c5!important;box-shadow:0 0 0 2px #103f3870,inset 0 0 12px #8de0c566!important}
+#battlePanel.stage-geometry-v3 .battlegrid .battlecell.attack-option,#battlePanel.stage-geometry-v3 .battlegrid .battlecell.bow-targetable{background:#d76a5b30!important;border:2px solid #ffb49e!important;box-shadow:0 0 0 2px #5b211c70,inset 0 0 12px #ffb49e55!important}
+#battlePanel.stage-geometry-v3 .battlegrid .battlecell.active{outline:2px solid #ffe3a0!important;outline-offset:-3px!important}
 #battlePanel.stage-geometry-v3 .battlegrid .void-cell{display:none!important;pointer-events:none!important}
 #battlePanel.stage-geometry-v3 .rotate-left,#battlePanel.stage-geometry-v3 .rotate-right,#battlePanel.stage-geometry-v3 .camera-angle{display:none!important}
 #battlePanel.stage-geometry-v3 .battlegrid .bv2-unit{bottom:2%!important}

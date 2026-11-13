@@ -1,5 +1,5 @@
 {
-  "release": "0.12.4-health-fit",
+  "release": "0.12.5-target-hints",
   "architecture": "chapter-one-consolidated-scene-battlefields",
   "generatedAt": "2026-11-13T03:30:00-06:00",
   "files": 189,
@@ -58,5 +58,6 @@
     }
   ]
 }
+
 
 
