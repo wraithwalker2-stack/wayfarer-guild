@@ -133,6 +133,16 @@
     const result = oldRender.apply(this, args), b = runState?.battle, panel = document.getElementById('battlePanel'), grid = panel?.querySelector('.battlegrid'); if (!b?.stageGeometry || !grid) return result;
     panel.classList.add('stage-geometry-v3', 'authored-room'); panel.dataset.stageGeometry = b.stageGeometry; grid.classList.add('stage-geometry-grid'); grid.style.width = '1200px'; grid.style.height = '675px'; grid.style.setProperty('--bv2-scene-scale', '100% 100%'); grid.style.setProperty('--bv2-scene-position', '50% 50%');
     for (let y = 0; y < HEIGHT; y++) for (let x = 0; x < WIDTH; x++) { const cell = grid.children[y * WIDTH + x]; if (!cell) continue; const h = b.elevations?.[y * WIDTH + x] || 0, p = projected(x, y, h); cell.style.left = `${p.sx}%`; cell.style.top = `${p.sy}%`; cell.style.transform = 'translate(-50%,-50%)'; cell.style.zIndex = String(Math.round(p.sy * 10) + h); cell.classList.toggle('void-cell', !b.roomTiles[y * WIDTH + x]); if (!b.roomTiles[y * WIDTH + x]) { cell.disabled = true; cell.setAttribute('aria-hidden', 'true'); } }
+    /* The overhead-vitals layer is created by the legacy health-bar pass
+       before this projection runs. Re-anchor it to the same scene coordinates
+       so bars never float at the old rectangular-grid positions. */
+    const vitals = grid.querySelector('.overhead-vitals-layer');
+    if (vitals) {
+      const pxW = grid.clientWidth || 1200, pxH = grid.clientHeight || 675;
+      const placeVitals = (nodes, units) => nodes.forEach((node, i) => { const unit = units[i]; if (!unit) return; const p = projected(unit.x, unit.y, b.elevations?.[unit.y * WIDTH + unit.x] || 0); node.style.left = `${p.sx / 100 * pxW - 28}px`; node.style.top = `${p.sy / 100 * pxH - 48}px`; node.style.width = '56px'; });
+      placeVitals([...vitals.querySelectorAll('.party-vitals')], b.heroes.filter(u => (heroes.find(h => h.id === u.id)?.hp || 0) > 0));
+      placeVitals([...vitals.querySelectorAll('.enemy-vitals')], b.foes.filter(u => u.hp > 0));
+    }
     panel.querySelectorAll('.rotate-left,.rotate-right,.camera-angle').forEach(button => { button.disabled = true; button.hidden = true; }); return result;
   };
   window.WayfarerStageEngine = Object.freeze({ version: '3.1.0', maps: Object.keys(MAPS), audit() { const b = runState?.battle; return b ? { map: b.stageGeometry, width: b.width, height: b.height, walkable: b.roomTiles?.filter(Boolean).length || 0, heroes: b.heroes.map(u => [u.x, u.y]), foes: b.foes.filter(f => f.hp > 0).map(u => [u.x, u.y]) } : { state: 'idle' }; } });
