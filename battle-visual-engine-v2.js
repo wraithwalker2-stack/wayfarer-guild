@@ -1,6 +1,7 @@
 /* Wayfarer Battle Visual Engine v2 — one authored scene, one logical overlay, one animation owner. */
 (function(){
 'use strict';
+document.documentElement.classList.add('bv2-ready');
 const ROOT='./assets/battle-v2/';
 const SCENES=Object.freeze({
  greenway:'scenes/greenway.png',mosslight:'scenes/mosslight.png',ashen:'scenes/ashen.png',sepulcher:'scenes/sepulcher.png',
@@ -17,6 +18,7 @@ const REGIONAL_CELLS=Object.freeze({
 let lastEvent='';
 function slug(value){return String(value||'').toLowerCase().replace(/[^a-z0-9]+/g,'')}
 function sceneFor(run,battle){if(run.dungeon?.id==='sewer')return`scenes/sewer-stage-${Math.max(1,Math.min(3,Number(battle.sewerStage)||1))}.png`;return SCENES[run.dungeon?.id]||SCENES.mosslight}
+function scenePosition(scene){return scene.endsWith('greenway.png')?'100% 62%':'50% 62%'}
 function position(cell,cols,rows){const col=cell%cols,row=Math.floor(cell/cols);return{x:cols===1?0:col/(cols-1)*100,y:rows===1?0:row/(rows-1)*100}}
 function makeUnit(kind,cell,atlas,cols,rows,extra=''){const p=position(cell,cols,rows),node=document.createElement('span');node.className=`bv2-unit bv2-${kind} ${extra}`;node.setAttribute('aria-hidden','true');node.style.setProperty('--bv2-atlas',`url('${ROOT}${atlas}')`);node.style.setProperty('--bv2-cols',String(cols));node.style.setProperty('--bv2-rows',String(rows));node.style.setProperty('--bv2-x',`${p.x}%`);node.style.setProperty('--bv2-y',`${p.y}%`);return node}
 function gridCell(grid,unit,battle){const width=Number(battle?.width)||Number(window.FIELD_W)||18;return unit&&grid.children?.[unit.y*width+unit.x]}
@@ -36,7 +38,7 @@ function renderUnits(run,battle,grid){
 function renderEvent(battle,grid){const event=battle.visualEvent;if(!event?.at)return;const key=`${event.at}:${event.kind}:${event.sourceId}:${event.targetId}`;if(key===lastEvent)return;lastEvent=key;const all=[...battle.heroes,...battle.foes],source=all.find(u=>u.id===event.sourceId),target=all.find(u=>u.id===event.targetId),sourceCell=gridCell(grid,source,battle),targetCell=gridCell(grid,target,battle);if(sourceCell){sourceCell.classList.add('bv2-acting');setTimeout(()=>sourceCell.classList.remove('bv2-acting'),560)}if(targetCell){targetCell.classList.add('bv2-struck');const effect=document.createElement('span');effect.className=`bv2-effect bv2-effect-${event.kind||'hit'}`;effect.setAttribute('aria-hidden','true');targetCell.append(effect);setTimeout(()=>{targetCell.classList.remove('bv2-struck');effect.remove()},650)}}
 function renderScene(){
  const run=runState,battle=run?.battle,panel=document.getElementById('battlePanel'),grid=panel?.querySelector('.battlegrid');if(!battle||!panel||!grid)return;
- const scene=sceneFor(run,battle);panel.classList.add('battle-visual-v2');panel.dataset.bv2Scene=scene.replace(/^scenes\//,'').replace(/\.png$/,'');grid.style.setProperty('--bv2-scene',`url('${ROOT}${scene}')`);grid.setAttribute('data-bv2-scene',panel.dataset.bv2Scene);
+ const scene=sceneFor(run,battle);panel.classList.add('battle-visual-v2');panel.dataset.bv2Scene=scene.replace(/^scenes\//,'').replace(/\.png$/,'');grid.style.setProperty('--bv2-scene',`url('${ROOT}${scene}')`);grid.style.setProperty('--bv2-scene-scale','165% 165%');grid.style.setProperty('--bv2-scene-position',scenePosition(scene));grid.setAttribute('data-bv2-scene',panel.dataset.bv2Scene);
  [...grid.children].forEach(cell=>{cell.classList.add('bv2-logical-cell');const ground=cell.querySelector('.iso-ground');if(ground){ground.removeAttribute('style');ground.classList.add('bv2-hit-surface')}});
  renderUnits(run,battle,grid);renderEvent(battle,grid);
 }
