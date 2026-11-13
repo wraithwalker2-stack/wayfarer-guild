@@ -41,6 +41,9 @@
 #battlePanel.rebuilt-combat .rebuild-sidebar h3{margin:0 0 8px;font:700 12px 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#ffe0a0}
 #battlePanel.rebuilt-combat .rebuild-sidebar .unit-card{display:flex;gap:7px;align-items:center;padding:7px;margin:5px 0;border:1px solid #ffffff17;border-radius:8px;background:#ffffff08;cursor:pointer;color:#eef6e9;font:10px 'DM Mono',monospace}
 #battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.active{border-color:#ffe7a0;background:#b8924e22}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.unplaced{border-style:dashed;border-color:#ffe7a077;background:#2b252266}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.placed{border-color:#8ee3a477}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.unplaced small{color:#ffe0a0}
 #battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy{border-color:#ff846a44}
 #battlePanel.rebuilt-combat .rebuild-sidebar .unit-token{width:26px;height:30px;border-radius:10px 10px 7px 7px;background:linear-gradient(180deg,#f0d28f 0 28%,#294a57 29% 100%);border:1px solid #f8efd0;flex:0 0 auto}
 #battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy .unit-token{background:linear-gradient(180deg,#c15b55 0 28%,#62283a 29% 100%);border-color:#ffb5a9}
