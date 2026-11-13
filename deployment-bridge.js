@@ -19,7 +19,8 @@
   window.wayfarerRebuildSelect = function (id) {
     const battle = battleState();
     if (!battle) return;
-    battle.selectedId = String(id);
+    const selected = (battle.heroes || []).find(hero => String(hero.id) === String(id));
+    battle.selectedId = selected ? selected.id : id;
     refreshBoard();
   };
   window.wayfarerRebuildCell = function (x, y) {
