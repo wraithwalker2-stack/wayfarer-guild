@@ -104,7 +104,9 @@
     const occupied = new Set(b.obstacles.map(o => key(o.x, o.y))), heroSpots = points.filter(p => map.deploy(p.x, p.y) && !occupied.has(key(p.x, p.y))).sort((a, c) => a.y - c.y || a.x - c.x), enemySpots = points.filter(p => map.enemy(p.x, p.y) && !occupied.has(key(p.x, p.y))).sort((a, c) => c.y - a.y || c.x - a.x), fallbackHeroes = points.filter(p => p.x <= 7 && !occupied.has(key(p.x, p.y))), fallbackEnemies = points.filter(p => p.x >= 13 && !occupied.has(key(p.x, p.y))), used = new Set();
     (b.heroes || []).forEach((unit, i) => { const p = nearest(heroSpots, used, 2) || nearest(fallbackHeroes, used, 2) || nearest(points, used, 2) || points[i]; if (p) { Object.assign(unit, { x: p.x, y: p.y, facing: 'E' }); used.add(key(p.x, p.y)); } });
     (b.foes || []).filter(f => f.hp > 0).forEach((unit, i) => { const p = nearest(enemySpots, used, 18) || nearest(fallbackEnemies, used, 18) || nearest(points, used, 18) || points[points.length - 1 - i]; if (p) { Object.assign(unit, { x: p.x, y: p.y, facing: 'W' }); used.add(key(p.x, p.y)); } });
-    b.deploymentTiles = heroSpots.filter(p => !occupied.has(key(p.x, p.y))).slice(0, Math.max(8, (b.heroes || []).length + 3)).map(p => key(p.x, p.y)); b.roomTileCount = points.length; b.stageCells = points.map(p => ({ x: p.x, y: p.y, tile: p.tile, height: p.height, terrain: p.terrain?.type || null }));
+    const assignedHeroKeys = (b.heroes || []).map(u => key(u.x, u.y));
+    b.deploymentTiles = [...new Set([...assignedHeroKeys, ...heroSpots.filter(p => !occupied.has(key(p.x, p.y))).map(p => key(p.x, p.y))])].slice(0, Math.max(8, (b.heroes || []).length + 3));
+    b.roomTileCount = points.length; b.stageCells = points.map(p => ({ x: p.x, y: p.y, tile: p.tile, height: p.height, terrain: p.terrain?.type || null }));
     if (typeof recordBattleLog === 'function') recordBattleLog(`Block board ${id}: ${points.length} connected floor cells · ${b.obstacles.length} authored obstacles.`);
   }
 
