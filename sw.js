@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.12.5-target-hints-1';
+const CACHE='wayfarer-public-alpha-0.12.6-block-board-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js',
