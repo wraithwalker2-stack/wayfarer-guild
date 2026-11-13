@@ -1,11 +1,11 @@
-const CACHE='wayfarer-public-alpha-0.12.1-battle-alignment-2';
+const CACHE='wayfarer-public-alpha-0.12.2-stage-geometry-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js',
   './combat-control-stability.js','./class-change-stability.js','./custom-class-art.js','./tactical-terrain.js','./tactical-objectives.js',
-  './sewer-mission.js','./sewer-mission.css','./campaign-consequences.js','./campaign-consequences.css','./location-theme-repair.js',
-  './holiday-system.js','./holiday-system.css','./veilwake-cathedral.js','./combat-lifecycle-guard.js','./battle-integrity-v1.js',
-  './battle-visual-engine-v2.js','./battle-visual-engine-v2.css','./guild-mark.svg','./manifest.webmanifest',
+  './sewer-mission.js','./sewer-mission.css','./campaign-consequences.js','./campaign-consequences.css',
+  './holiday-system.js','./holiday-system.css','./combat-lifecycle-guard.js','./battle-integrity-v1.js',
+  './battle-content-v3.js','./battle-stage-engine-v3.js','./battle-stage-engine-v3.css','./battle-visual-engine-v2.js','./battle-visual-engine-v2.css','./guild-mark.svg','./manifest.webmanifest',
   './assets/music-veilwake-haunted-masquerade.mp3','./assets/music-sepulcher-mist-forest.mp3',
   './assets/battle-v2/scenes/greenway.png','./assets/battle-v2/scenes/mosslight.png','./assets/battle-v2/scenes/ashen.png',
   './assets/battle-v2/scenes/sepulcher.png','./assets/battle-v2/scenes/southgate.png','./assets/battle-v2/scenes/veilwake.png',

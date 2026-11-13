@@ -1,0 +1,7 @@
+/* One scene, one coordinate system. */
+#battlePanel.stage-geometry-v3 .battlegrid.stage-geometry-grid{position:relative!important;width:1200px!important;height:675px!important;min-width:1200px!important;min-height:675px!important;max-width:none!important;aspect-ratio:16/9;background-size:100% 100%,100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;overflow:hidden!important}
+#battlePanel.stage-geometry-v3 .battlegrid .iso-cell{position:absolute!important;margin:0!important}
+#battlePanel.stage-geometry-v3 .battlegrid .void-cell{display:none!important;pointer-events:none!important}
+#battlePanel.stage-geometry-v3 .rotate-left,#battlePanel.stage-geometry-v3 .rotate-right,#battlePanel.stage-geometry-v3 .camera-angle{display:none!important}
+#battlePanel.stage-geometry-v3 .battlegrid .bv2-unit{bottom:2%!important}
+@media(max-width:900px){#battlePanel.stage-geometry-v3 .battlegrid.stage-geometry-grid{width:1080px!important;height:608px!important;min-width:1080px!important;min-height:608px!important}}

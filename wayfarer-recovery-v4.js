@@ -1,7 +1,7 @@
 /* Final recovery authority: save reset and release diagnostics. */
 (function installRecoveryV4(global){
 'use strict';
-const VERSION='0.12.1-battle-alignment';
+const VERSION='0.12.2-stage-geometry';
 function gameKey(key){return typeof key==='string'&&(key.startsWith('wayfarer-')||key==='guild-sfx')}
 function clearGameStorage(){
  const removed=[];
