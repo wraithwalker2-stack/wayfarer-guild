@@ -30,6 +30,30 @@
     if (typeof window.handleRebuiltAction === 'function') return window.handleRebuiltAction(action);
   };
 
+  function bindControls() {
+    const panel = document.getElementById('battlePanel');
+    if (!panel) return;
+    panel.querySelectorAll('.rebuild-cell').forEach(cell => {
+      cell.onclick = function () { window.wayfarerRebuildCell(this.dataset.x, this.dataset.y); };
+    });
+    panel.querySelectorAll('[data-select]').forEach(card => {
+      card.onclick = function () { window.wayfarerRebuildSelect(this.dataset.select); };
+    });
+    panel.querySelectorAll('[data-action]').forEach(button => {
+      button.onclick = function () { window.wayfarerRebuildAction(this.dataset.action); };
+    });
+  }
+
+  if (typeof window.renderBattle === 'function') {
+    const renderBattle = window.renderBattle;
+    window.renderBattle = function () {
+      const result = renderBattle.apply(this, arguments);
+      bindControls();
+      return result;
+    };
+  }
+  bindControls();
+
   document.addEventListener('click', function (event) {
     const element = event.target?.closest?.('#battlePanel [data-select], #battlePanel .rebuild-cell');
     if (!element) return;

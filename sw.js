@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.13.0-combat-reset-6';
+const CACHE='wayfarer-public-alpha-0.13.0-combat-reset-7';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js',
