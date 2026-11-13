@@ -1,5 +1,5 @@
 {
-  "release": "0.12.2-stage-geometry",
+  "release": "0.12.3-scene-fit",
   "architecture": "chapter-one-consolidated-scene-battlefields",
   "saveFormat": 1,
   "saveCompatibility": "0.8.x",
@@ -21,4 +21,5 @@
     "campaign": "ordered browser modules"
   }
 }
+
 

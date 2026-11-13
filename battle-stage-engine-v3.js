@@ -1,27 +1,139 @@
-/* Wayfarer battle stage engine v3 — sole owner of stage geometry and projection. */
-(function(){
-'use strict';
-const SIZE=21,SCENE={greenway:'greenway',mosslight:'mosslight',ashen:'ashen',sepulcher:'sepulcher','exile-ambush':'southgate','veilwake-crypt':'veilwake'},key=(x,y)=>`${x},${y}`,between=(n,a,b)=>n>=a&&n<=b,clamp=(n,a=0,b=1)=>Math.max(a,Math.min(b,n));
-function projected(x,y,height=0){return{sx:50+(x-y)*2.34,sy:8+(x+y)*2.04-height*3.65}}
-function ellipse(sx,sy,cx,cy,rx,ry){return Math.pow((sx-cx)/rx,2)+Math.pow((sy-cy)/ry,2)<=1}
-function nearLine(sx,sy,x1,y1,x2,y2,width){const vx=x2-x1,vy=y2-y1,wx=sx-x1,wy=sy-y1,t=clamp((wx*vx+wy*vy)/(vx*vx+vy*vy));return Math.hypot(sx-(x1+t*vx),sy-(y1+t*vy))<=width}
-const floor=(sx,sy)=>ellipse(sx,sy,50,50,48,43);
-const MAPS={
- greenway:{open:(x,y)=>floor(x,y)&&(nearLine(x,y,8,82,92,18,8)||ellipse(x,y,25,53,21,26)||ellipse(x,y,53,24,23,17)||ellipse(x,y,76,58,22,25)),height:(x,y)=>y<24&&between(x,34,72)?2:y<38&&between(x,28,76)?1:0,terrain:(x,y)=>nearLine(x,y,32,17,72,88,3.2)&&!nearLine(x,y,48,49,58,57,5)?{type:'water',name:'Greenway stream'}:null,deploy:p=>p.sx<29&&p.sy>50,enemy:p=>p.sx>70&&p.sy<55},
- mosslight:{open:(x,y)=>floor(x,y)&&(ellipse(x,y,22,59,23,27)||ellipse(x,y,47,39,28,25)||ellipse(x,y,74,31,21,20)||ellipse(x,y,73,70,24,20)||nearLine(x,y,13,79,88,18,7)),height:(x,y)=>y<25?2:y<43?1:0,terrain:(x,y)=>(ellipse(x,y,67,67,13,10)||nearLine(x,y,35,16,64,73,3.4))?{type:'water',name:'Glowstream shallows'}:ellipse(x,y,17,69,5,5)?{type:'hazard',name:'Caustic fungus',damage:4}:null,deploy:p=>p.sx<27&&p.sy>52,enemy:p=>p.sx>68&&p.sy<54},
- ashen:{open:(x,y)=>floor(x,y)&&(ellipse(x,y,23,65,24,22)||ellipse(x,y,49,48,24,20)||ellipse(x,y,73,26,23,19)||ellipse(x,y,78,65,18,18)||nearLine(x,y,16,78,88,18,6)),height:(x,y)=>y<29?2:y<47?1:0,terrain:(x,y)=>nearLine(x,y,38,17,74,86,3.5)?{type:'water',name:'Astral runoff'}:ellipse(x,y,25,80,7,5)?{type:'hazard',name:'Lava fracture',damage:5}:null,deploy:p=>p.sx<28&&p.sy>54,enemy:p=>p.sx>68&&p.sy<52},
- sepulcher:{open:(x,y)=>floor(x,y)&&(ellipse(x,y,24,65,25,23)||ellipse(x,y,29,26,22,17)||ellipse(x,y,75,25,21,18)||ellipse(x,y,74,67,23,22)||nearLine(x,y,12,72,88,28,6)),height:(x,y)=>y<28?2:y<45?1:0,terrain:(x,y)=>ellipse(x,y,51,52,18,15)?{type:'water',name:'Gravewater'}:ellipse(x,y,79,78,8,5)?{type:'hazard',name:'Soulfire',damage:6}:null,deploy:p=>p.sx<29&&p.sy>53,enemy:p=>p.sx>69&&p.sy<53},
- southgate:{open:(x,y)=>floor(x,y)&&nearLine(x,y,8,76,92,26,17),height:(x,y)=>y<34?1:0,terrain:(x,y)=>y>59&&((Math.floor(x/8)+Math.floor(y/7))%3===0)?{type:'tall-grass',name:'Tall grass',evasion:.5}:null,deploy:p=>p.sx<27,enemy:p=>p.sx>72},
- veilwake:{open:(x,y)=>floor(x,y)&&(ellipse(x,y,25,59,24,24)||ellipse(x,y,52,49,25,22)||ellipse(x,y,76,27,22,19)||ellipse(x,y,77,70,20,20)||nearLine(x,y,12,77,91,22,7)),height:(x,y)=>y<28?2:y<47?1:0,terrain:(x,y)=>(ellipse(x,y,30,31,8,10)||ellipse(x,y,74,68,10,9))?{type:'water',name:'Blackglass reflecting pool'}:ellipse(x,y,31,49,8,7)?{type:'hazard',name:'Crimson ritual seal',damage:6}:null,deploy:p=>p.sx<28&&p.sy>52,enemy:p=>p.sx>69&&p.sy<55},
- sewer1:{open:(x,y)=>floor(x,y)&&(between(y,16,36)||between(y,64,85)||nearLine(x,y,26,68,36,31,5)||nearLine(x,y,68,70,78,31,5)),height:(x,y)=>between(y,16,36)||between(y,64,85)?1:0,terrain:(x,y)=>between(y,38,62)?{type:'deep-water',name:'Flood channel'}:null,deploy:p=>p.sx<31&&p.sy>62,enemy:p=>p.sx>68&&p.sy<38},
- sewer2:{open:(x,y)=>floor(x,y)&&((between(x,7,93)&&between(y,38,62))||(between(x,39,61)&&between(y,7,93)))&&!ellipse(x,y,50,50,10,10),height:()=>1,terrain:(x,y)=>between(x,45,55)&&!ellipse(x,y,50,50,10,10)?{type:'shallow-water',name:'Shallow runoff'}:null,deploy:p=>p.sx<28&&between(p.sy,38,62),enemy:p=>p.sx>72&&between(p.sy,38,62)},
- sewer3:{open:(x,y)=>floor(x,y)&&!ellipse(x,y,50,50,9,9)&&(y<25||y>75||x<23||x>77||between(x,46,54)||between(y,46,54)),height:(x,y)=>x<23||x>77||y<25||y>75?1:0,terrain:(x,y)=>ellipse(x,y,50,50,30,25)&&!ellipse(x,y,50,50,9,9)?{type:'shallow-water',name:'Cistern shallows'}:null,deploy:p=>p.sx<25&&p.sy>56,enemy:p=>p.sx>72&&p.sy<48}
-};
-function mapId(run,b){return run.dungeon.id==='sewer'?`sewer${Math.max(1,Math.min(3,Number(b.sewerStage)||1))}`:SCENE[run.dungeon.id]||'mosslight'}
-function largest(points){const left=new Set(points.map(p=>key(p.x,p.y))),parts=[];while(left.size){const seed=left.values().next().value,[x,y]=seed.split(',').map(Number),part=[],queue=[{x,y}];left.delete(seed);for(let i=0;i<queue.length;i++){const p=queue[i];part.push(p);for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const k=key(p.x+dx,p.y+dy);if(left.delete(k))queue.push({x:p.x+dx,y:p.y+dy})}}parts.push(part)}return parts.sort((a,b)=>b.length-a.length)[0]||[]}
-function applyStage(run,b){const id=mapId(run,b),map=MAPS[id],all=[];if(!map)return;for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){const flat=projected(x,y),h=map.height(flat.sx,flat.sy,x,y)||0,p=projected(x,y,h);if(map.open(p.sx,p.sy,x,y))all.push({x,y,sx:p.sx,sy:p.sy,height:h,terrain:map.terrain(p.sx,p.sy,x,y)})}const component=largest(all),allowed=new Set(component.map(p=>key(p.x,p.y))),points=all.filter(p=>allowed.has(key(p.x,p.y)));b.width=SIZE;b.height=SIZE;b.viewRotation=0;b.authoredRoom=true;b.expandedBattlefield=true;b.stageGeometry=id;b.roomTiles=Array.from({length:SIZE*SIZE},(_,i)=>allowed.has(key(i%SIZE,Math.floor(i/SIZE))));b.elevations=b.roomTiles.map((open,i)=>open?(points.find(p=>p.x===i%SIZE&&p.y===Math.floor(i/SIZE))?.height||0):0);b.tileTerrain={};for(const p of points)if(p.terrain)b.tileTerrain[key(p.x,p.y)]={...p.terrain};b.obstacles=[];if(id==='sewer2'){const west=points.filter(p=>p.sx<24&&between(p.sy,40,60)).sort((a,c)=>a.sx-c.sx)[0],east=points.filter(p=>p.sx>76&&between(p.sy,40,60)).sort((a,c)=>c.sx-a.sx)[0];for(const [spot,name] of [[west,'West side-passage blockage'],[east,'East side-passage blockage']])if(spot)b.obstacles.push({x:spot.x,y:spot.y,kind:'sewer-rubble',name,icon:'◆',destructible:true,optionalObjective:true,hp:18,maxHp:18})}const used=new Set(),heroSpots=points.filter(map.deploy).sort((a,c)=>a.sx-c.sx||c.sy-a.sy);b.heroes.forEach((unit,i)=>{const p=heroSpots.find(p=>!used.has(key(p.x,p.y)))||points[i];if(p){Object.assign(unit,{x:p.x,y:p.y});used.add(key(p.x,p.y))}});const enemySpots=points.filter(map.enemy).sort((a,c)=>c.sx-a.sx||a.sy-c.sy),fallback=[...points].sort((a,c)=>c.sx-a.sx||a.sy-c.sy);b.foes.filter(f=>f.hp>0).forEach(foe=>{const p=[...enemySpots,...fallback].find(p=>!used.has(key(p.x,p.y)));if(p){Object.assign(foe,{x:p.x,y:p.y,facing:'W'});used.add(key(p.x,p.y))}});b.deploymentTiles=heroSpots.slice(0,Math.max(8,b.heroes.length+3)).map(p=>key(p.x,p.y));b.roomTileCount=points.length;b.cameraNeedsCenter=true;delete b.cameraScrollLeft;delete b.cameraScrollTop;recordBattleLog(`Stage geometry: ${id} · ${points.length} scene-mapped floor positions.`)}
-const oldBegin=window.beginBattle;window.beginBattle=function(...args){const result=oldBegin.apply(this,args),r=runState,b=r?.battle;if(b){applyStage(r,b);renderRun()}return result};
-const oldClick=window.battleClick;window.battleClick=function(x,y){const b=runState?.battle;if(b?.roomTiles&&!b.roomTiles[y*SIZE+x])return toast('That part of the scene is not traversable.');return oldClick(x,y)};
-const oldRender=window.renderBattle;window.renderBattle=function(...args){const result=oldRender.apply(this,args),b=runState?.battle,panel=document.getElementById('battlePanel'),grid=panel?.querySelector('.battlegrid');if(!b?.stageGeometry||!grid)return result;panel.classList.add('stage-geometry-v3','authored-room');panel.dataset.stageGeometry=b.stageGeometry;grid.classList.add('stage-geometry-grid');grid.style.width='1200px';grid.style.height='675px';grid.style.setProperty('--bv2-scene-scale','100% 100%');grid.style.setProperty('--bv2-scene-position','50% 50%');for(let y=0;y<SIZE;y++)for(let x=0;x<SIZE;x++){const cell=grid.children[y*SIZE+x];if(!cell)continue;const h=b.elevations?.[y*SIZE+x]||0,p=projected(x,y,h);cell.style.left=`${p.sx}%`;cell.style.top=`${p.sy}%`;cell.style.transform='translate(-50%,-50%)';cell.style.zIndex=String(Math.round(p.sy*10)+h);cell.classList.toggle('void-cell',!b.roomTiles[y*SIZE+x]);if(!b.roomTiles[y*SIZE+x]){cell.disabled=true;cell.setAttribute('aria-hidden','true')}}panel.querySelectorAll('.rotate-left,.rotate-right,.camera-angle').forEach(button=>{button.disabled=true;button.hidden=true});return result};
-window.WayfarerStageEngine=Object.freeze({version:'3.0.0',maps:Object.keys(MAPS),audit(){const b=runState?.battle;return b?{map:b.stageGeometry,walkable:b.roomTiles?.filter(Boolean).length||0,heroes:b.heroes.map(u=>[u.x,u.y]),foes:b.foes.filter(f=>f.hp>0).map(u=>[u.x,u.y])}:{state:'idle'}}});
+/* Wayfarer battle stage engine v3 — one logical board, one authored scene. */
+(function () {
+  'use strict';
+
+  /* The legacy combat engine is a 20x11 board. The previous stage overlay
+     used 21x21 cells, which detached the logical board from the scene and
+     made the sewer lanes impossible to traverse. */
+  const WIDTH = Number(window.FIELD_W) || 20;
+  const HEIGHT = Number(window.FIELD_H) || 11;
+  const SCENE = { greenway: 'greenway', mosslight: 'mosslight', ashen: 'ashen', sepulcher: 'sepulcher', 'exile-ambush': 'southgate', 'veilwake-crypt': 'veilwake' };
+  const key = (x, y) => `${x},${y}`;
+  const between = (n, a, b) => n >= a && n <= b;
+  const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
+
+  /* Project the whole logical board into each authored isometric diorama. */
+  function projected(x, y, height = 0) {
+    const nx = WIDTH <= 1 ? 0 : x / (WIDTH - 1), ny = HEIGHT <= 1 ? 0 : y / (HEIGHT - 1);
+    return { sx: 8 + nx * 84 - ny * 42, sy: 12 + nx * 36 + ny * 36 - height * 3.65 };
+  }
+  function ellipse(sx, sy, cx, cy, rx, ry) { return ((sx - cx) / rx) ** 2 + ((sy - cy) / ry) ** 2 <= 1; }
+  function nearLine(sx, sy, x1, y1, x2, y2, width) {
+    const vx = x2 - x1, vy = y2 - y1, wx = sx - x1, wy = sy - y1;
+    const t = clamp((wx * vx + wy * vy) / (vx * vx + vy * vy));
+    return Math.hypot(sx - (x1 + t * vx), sy - (y1 + t * vy)) <= width;
+  }
+  const floor = (sx, sy) => ellipse(sx, sy, 50, 50, 43, 36);
+
+  const MAPS = {
+    greenway: {
+      open: (x, y) => floor(x, y) && (nearLine(x, y, 8, 82, 92, 18, 8) || ellipse(x, y, 25, 53, 21, 26) || ellipse(x, y, 53, 24, 23, 17) || ellipse(x, y, 76, 58, 22, 25)),
+      height: (x, y) => y < 24 && between(x, 34, 72) ? 2 : y < 38 && between(x, 28, 76) ? 1 : 0,
+      terrain: (x, y) => nearLine(x, y, 32, 17, 72, 88, 3.2) && !nearLine(x, y, 48, 49, 58, 57, 5) ? { type: 'water', name: 'Greenway stream' } : null,
+      deploy: p => p.sx < 29 && p.sy > 50, enemy: p => p.sx > 70 && p.sy < 55
+    },
+    mosslight: {
+      open: (x, y) => floor(x, y) && (ellipse(x, y, 22, 59, 23, 27) || ellipse(x, y, 47, 39, 28, 25) || ellipse(x, y, 74, 31, 21, 20) || ellipse(x, y, 73, 70, 24, 20) || nearLine(x, y, 13, 79, 88, 18, 7)),
+      height: (x, y) => y < 25 ? 2 : y < 43 ? 1 : 0,
+      terrain: (x, y) => (ellipse(x, y, 67, 67, 13, 10) || nearLine(x, y, 35, 16, 64, 73, 3.4)) ? { type: 'water', name: 'Glowstream shallows' } : ellipse(x, y, 17, 69, 5, 5) ? { type: 'hazard', name: 'Caustic fungus', damage: 4 } : null,
+      deploy: p => p.sx < 27 && p.sy > 52, enemy: p => p.sx > 68 && p.sy < 54
+    },
+    ashen: {
+      open: (x, y) => floor(x, y) && (ellipse(x, y, 23, 65, 24, 22) || ellipse(x, y, 49, 48, 24, 20) || ellipse(x, y, 73, 26, 23, 19) || ellipse(x, y, 78, 65, 18, 18) || nearLine(x, y, 16, 78, 88, 18, 6)),
+      height: (x, y) => y < 29 ? 2 : y < 47 ? 1 : 0,
+      terrain: (x, y) => nearLine(x, y, 38, 17, 74, 86, 3.5) ? { type: 'water', name: 'Astral runoff' } : ellipse(x, y, 25, 80, 7, 5) ? { type: 'hazard', name: 'Lava fracture', damage: 5 } : null,
+      deploy: p => p.sx < 28 && p.sy > 54, enemy: p => p.sx > 68 && p.sy < 52
+    },
+    sepulcher: {
+      open: (x, y) => floor(x, y) && (ellipse(x, y, 24, 65, 25, 23) || ellipse(x, y, 29, 26, 22, 17) || ellipse(x, y, 75, 25, 21, 18) || ellipse(x, y, 74, 67, 23, 22) || nearLine(x, y, 12, 72, 88, 28, 6)),
+      height: (x, y) => y < 28 ? 2 : y < 45 ? 1 : 0,
+      terrain: (x, y) => ellipse(x, y, 51, 52, 18, 15) ? { type: 'water', name: 'Gravewater' } : ellipse(x, y, 79, 78, 8, 5) ? { type: 'hazard', name: 'Soulfire', damage: 6 } : null,
+      deploy: p => p.sx < 29 && p.sy > 53, enemy: p => p.sx > 69 && p.sy < 53
+    },
+    southgate: {
+      open: (x, y) => floor(x, y) && nearLine(x, y, 8, 76, 92, 26, 17),
+      height: (x, y) => y < 34 ? 1 : 0,
+      terrain: (x, y) => y > 59 && ((Math.floor(x / 8) + Math.floor(y / 7)) % 3 === 0) ? { type: 'tall-grass', name: 'Tall grass', evasion: .5 } : null,
+      deploy: p => p.sx < 27, enemy: p => p.sx > 72
+    },
+    veilwake: {
+      open: (x, y) => floor(x, y) && (ellipse(x, y, 25, 59, 24, 24) || ellipse(x, y, 52, 49, 25, 22) || ellipse(x, y, 76, 27, 22, 19) || ellipse(x, y, 77, 70, 20, 20) || nearLine(x, y, 12, 77, 91, 22, 7)),
+      height: (x, y) => y < 28 ? 2 : y < 47 ? 1 : 0,
+      terrain: (x, y) => (ellipse(x, y, 30, 31, 8, 10) || ellipse(x, y, 74, 68, 10, 9)) ? { type: 'water', name: 'Blackglass reflecting pool' } : ellipse(x, y, 31, 49, 8, 7) ? { type: 'hazard', name: 'Crimson ritual seal', damage: 6 } : null,
+      deploy: p => p.sx < 28 && p.sy > 52, enemy: p => p.sx > 69 && p.sy < 55
+    },
+    sewer1: {
+      open: (x, y) => floor(x, y) && (between(y, 16, 36) || between(y, 64, 85) || nearLine(x, y, 26, 68, 36, 31, 5) || nearLine(x, y, 68, 70, 78, 31, 5)),
+      height: (x, y) => between(y, 16, 36) || between(y, 64, 85) ? 1 : 0,
+      terrain: (x, y) => between(y, 38, 62) && between(x, 36, 64) ? { type: 'deep-water', name: 'Flood channel' } : null,
+      deploy: p => p.sx < 31 && p.sy > 62, enemy: p => p.sx > 68 && p.sy < 38
+    },
+    sewer2: {
+      /* Four sewer arms are joined by a narrow walkable ring. The center
+         remains a deep-water, non-walkable shaft. */
+      open: (x, y) => {
+        const cross = (between(x, 7, 93) && between(y, 38, 62)) || (between(x, 39, 61) && between(y, 7, 93));
+        const hole = ellipse(x, y, 50, 50, 7, 7), ring = ellipse(x, y, 50, 50, 12, 12) && !hole;
+        return floor(x, y) && (cross || ring) && !hole;
+      },
+      height: () => 1,
+      terrain: (x, y) => ellipse(x, y, 50, 50, 12, 12) && !ellipse(x, y, 50, 50, 7, 7) ? { type: 'shallow-water', name: 'Shallow runoff' } : null,
+      deploy: p => p.sx < 28 && between(p.sy, 38, 62), enemy: p => p.sx > 72 && between(p.sy, 38, 62)
+    },
+    sewer3: {
+      open: (x, y) => floor(x, y) && !ellipse(x, y, 50, 50, 9, 9) && (y < 25 || y > 75 || x < 23 || x > 77 || between(x, 46, 54) || between(y, 46, 54)),
+      height: (x, y) => x < 23 || x > 77 || y < 25 || y > 75 ? 1 : 0,
+      terrain: (x, y) => ellipse(x, y, 50, 50, 30, 25) && !ellipse(x, y, 50, 50, 9, 9) ? { type: 'shallow-water', name: 'Cistern shallows' } : null,
+      deploy: p => p.sx < 25 && p.sy > 56, enemy: p => p.sx > 72 && p.sy < 48
+    }
+  };
+
+  function mapId(run, b) { return run.dungeon.id === 'sewer' ? `sewer${Math.max(1, Math.min(3, Number(b.sewerStage) || 1))}` : SCENE[run.dungeon.id] || 'mosslight'; }
+  function largest(points) {
+    const left = new Set(points.map(p => key(p.x, p.y))), parts = [];
+    while (left.size) {
+      const seed = left.values().next().value, [x, y] = seed.split(',').map(Number), part = [], queue = [{ x, y }]; left.delete(seed);
+      for (let i = 0; i < queue.length; i++) {
+        const p = queue[i]; part.push(p);
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const k = key(p.x + dx, p.y + dy); if (left.delete(k)) queue.push({ x: p.x + dx, y: p.y + dy }); }
+      }
+      parts.push(part);
+    }
+    return parts.sort((a, b) => b.length - a.length)[0] || [];
+  }
+  function applyStage(run, b) {
+    const id = mapId(run, b), map = MAPS[id], all = []; if (!map) return;
+    for (let y = 0; y < HEIGHT; y++) for (let x = 0; x < WIDTH; x++) { const flat = projected(x, y), h = map.height(flat.sx, flat.sy, x, y) || 0, p = projected(x, y, h); if (map.open(p.sx, p.sy, x, y)) all.push({ x, y, sx: p.sx, sy: p.sy, height: h, terrain: map.terrain(p.sx, p.sy, x, y) }); }
+    const component = largest(all), allowed = new Set(component.map(p => key(p.x, p.y))), points = all.filter(p => allowed.has(key(p.x, p.y)));
+    b.width = WIDTH; b.height = HEIGHT; b.viewRotation = 0; b.authoredRoom = true; b.expandedBattlefield = true; b.stageGeometry = id;
+    b.roomTiles = Array.from({ length: WIDTH * HEIGHT }, (_, i) => allowed.has(key(i % WIDTH, Math.floor(i / WIDTH))));
+    b.elevations = b.roomTiles.map((open, i) => open ? (points.find(p => p.x === i % WIDTH && p.y === Math.floor(i / WIDTH))?.height || 0) : 0);
+    b.tileTerrain = {}; for (const p of points) if (p.terrain) b.tileTerrain[key(p.x, p.y)] = { ...p.terrain };
+    b.obstacles = [];
+    if (id === 'sewer2') {
+      const protectedSpawns = new Set(points.filter(p => map.deploy(p) || map.enemy(p)).map(p => key(p.x, p.y)));
+      const west = points.filter(p => p.sx < 36 && between(p.sy, 28, 72) && !protectedSpawns.has(key(p.x, p.y))).sort((a, c) => c.sx - a.sx)[0];
+      const east = points.filter(p => p.sx > 64 && between(p.sy, 28, 72) && !protectedSpawns.has(key(p.x, p.y))).sort((a, c) => a.sx - c.sx)[0];
+      for (const [spot, name] of [[west, 'West side-passage blockage'], [east, 'East side-passage blockage']]) if (spot) b.obstacles.push({ x: spot.x, y: spot.y, kind: 'sewer-rubble', name, icon: '◆', destructible: true, optionalObjective: true, hp: 18, maxHp: 18 });
+    }
+    const used = new Set(), heroSpots = points.filter(map.deploy).sort((a, c) => a.sx - c.sx || c.sy - a.sy);
+    b.heroes.forEach((unit, i) => { const p = heroSpots.find(p => !used.has(key(p.x, p.y))) || points[i]; if (p) { Object.assign(unit, { x: p.x, y: p.y }); used.add(key(p.x, p.y)); } });
+    const enemySpots = points.filter(map.enemy).sort((a, c) => c.sx - a.sx || a.sy - c.sy), fallback = [...points].sort((a, c) => c.sx - a.sx || a.sy - c.sy);
+    b.foes.filter(f => f.hp > 0).forEach(foe => { const p = [...enemySpots, ...fallback].find(p => !used.has(key(p.x, p.y))); if (p) { Object.assign(foe, { x: p.x, y: p.y, facing: 'W' }); used.add(key(p.x, p.y)); } });
+    b.deploymentTiles = heroSpots.slice(0, Math.max(8, b.heroes.length + 3)).map(p => key(p.x, p.y)); b.roomTileCount = points.length; b.cameraNeedsCenter = true; delete b.cameraScrollLeft; delete b.cameraScrollTop;
+    recordBattleLog(`Stage geometry: ${id} · ${points.length} scene-mapped floor positions.`);
+  }
+
+  const oldBegin = window.beginBattle;
+  window.beginBattle = function (...args) { const result = oldBegin.apply(this, args), r = runState, b = r?.battle; if (b) { applyStage(r, b); renderRun(); } return result; };
+  const oldClick = window.battleClick;
+  window.battleClick = function (x, y) { const b = runState?.battle; if (b?.roomTiles && !b.roomTiles[y * WIDTH + x]) return toast('That part of the scene is not traversable.'); return oldClick(x, y); };
+  const oldRender = window.renderBattle;
+  window.renderBattle = function (...args) {
+    const result = oldRender.apply(this, args), b = runState?.battle, panel = document.getElementById('battlePanel'), grid = panel?.querySelector('.battlegrid'); if (!b?.stageGeometry || !grid) return result;
+    panel.classList.add('stage-geometry-v3', 'authored-room'); panel.dataset.stageGeometry = b.stageGeometry; grid.classList.add('stage-geometry-grid'); grid.style.width = '1200px'; grid.style.height = '675px'; grid.style.setProperty('--bv2-scene-scale', '100% 100%'); grid.style.setProperty('--bv2-scene-position', '50% 50%');
+    for (let y = 0; y < HEIGHT; y++) for (let x = 0; x < WIDTH; x++) { const cell = grid.children[y * WIDTH + x]; if (!cell) continue; const h = b.elevations?.[y * WIDTH + x] || 0, p = projected(x, y, h); cell.style.left = `${p.sx}%`; cell.style.top = `${p.sy}%`; cell.style.transform = 'translate(-50%,-50%)'; cell.style.zIndex = String(Math.round(p.sy * 10) + h); cell.classList.toggle('void-cell', !b.roomTiles[y * WIDTH + x]); if (!b.roomTiles[y * WIDTH + x]) { cell.disabled = true; cell.setAttribute('aria-hidden', 'true'); } }
+    panel.querySelectorAll('.rotate-left,.rotate-right,.camera-angle').forEach(button => { button.disabled = true; button.hidden = true; }); return result;
+  };
+  window.WayfarerStageEngine = Object.freeze({ version: '3.1.0', maps: Object.keys(MAPS), audit() { const b = runState?.battle; return b ? { map: b.stageGeometry, width: b.width, height: b.height, walkable: b.roomTiles?.filter(Boolean).length || 0, heroes: b.heroes.map(u => [u.x, u.y]), foes: b.foes.filter(f => f.hp > 0).map(u => [u.x, u.y]) } : { state: 'idle' }; } });
 })();

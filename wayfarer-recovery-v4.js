@@ -1,7 +1,7 @@
 /* Final recovery authority: save reset and release diagnostics. */
 (function installRecoveryV4(global){
 'use strict';
-const VERSION='0.12.2-stage-geometry';
+const VERSION='0.12.3-scene-fit';
 function gameKey(key){return typeof key==='string'&&(key.startsWith('wayfarer-')||key==='guild-sfx')}
 function clearGameStorage(){
  const removed=[];
@@ -22,3 +22,4 @@ global.WayfarerRecoveryV4=Object.freeze({version:VERSION,clearGameStorage,resetG
 const release=document.querySelector('.release-version');if(release)release.textContent=`Public Alpha · v${VERSION}`;
 global.WayfarerEngine?.modules?.register?.('recovery-v4',VERSION,global.WayfarerRecoveryV4);
 })(window);
+
