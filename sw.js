@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.12.0-battle-visual-reset-1';
+const CACHE='wayfarer-public-alpha-0.12.1-battle-alignment-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js','./battle-sfx.js',
