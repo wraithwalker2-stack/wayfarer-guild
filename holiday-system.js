@@ -17,16 +17,20 @@ function installNightbound(){
   {id:'nb_sanguine',name:'Sanguine Strike',type:'strike',cost:75,level:1,power:4,range:1,drain:.35,desc:'Single target · 1 tile. Deal +4 physical power and restore 35% of damage dealt as vigor.'},
   {id:'nb_mist',name:'Mist Step',type:'stealth',cost:85,level:1,desc:'Self. Fade into crimson mist, lowering threat and reducing damage by 25% through the next round.'},
   {id:'nb_thirst',name:'Blood Feast',type:'strike',cost:125,level:3,power:6,range:1,execute:true,drain:.5,desc:'Single target · 1 tile. +6 power, stronger against wounded foes, restoring 50% of damage dealt.'},
+  {id:'nb_bat',name:'Call Sanguine Bat',type:'summon',pet:'bloodbat',cost:120,level:3,desc:'Summon · self. Bind a swift bat familiar for 4 party phases. Its attacks restore a small amount of the Nightbound’s vigor.'},
+  {id:'nb_wolf',name:'Call Gloam Wolf',type:'summon',pet:'nightwolf',cost:145,level:4,desc:'Summon · self. Bind a hard-hitting wolf familiar for 4 party phases. Its attacks restore a small amount of the Nightbound’s vigor.'},
   {id:'nb_night',name:'Child of Night',type:'passive',cost:105,level:2,effect:{agility:2,hp:8},desc:'+2 agility and +8 maximum vigor while equipped.'},
   {id:'nb_resilience',name:'Undying Resolve',type:'passive',cost:135,level:3,effect:{armor:1,hp:12},desc:'+1 armor and +12 maximum vigor while equipped.'},
   {id:'nb_retort',name:'Crimson Retort',type:'reaction',cost:110,level:2,power:3,range:1,drain:.25,desc:'Counter a surviving adjacent hit and restore 25% of damage dealt, once per round.'}
  ];
- const info={icon:'☾',parent:'Rogue',roles:['striker','scout','frontline'],armor:1,growth:{strength:1,constitution:2,agility:2,luck:1},perk:'Crimson hunger · draining attacks restore vigor, rewarding calculated pressure without replacing a healer.',weapons:['weapon:dagger','weapon:knight-sword','weapon:one-hand'],armorTags:['armor:light','armor:medium'],model:'Assassin',skills};
- JOBS.Nightbound=info;JOB_NAMES.push('Nightbound');if(typeof ADVANCED_JOB_INFO!=='undefined')ADVANCED_JOB_INFO.Nightbound=info;
+ const info={icon:'☾',parent:'Rogue',roles:['striker','scout','frontline'],armor:2,growth:{strength:2,constitution:2,wisdom:1,agility:2,luck:2},perk:'Crimson hunger · stronger than an Assassin, weak to fire and holy damage, immune to allied healing magic, and sustained by potions, blood skills, and familiars.',weapons:['weapon:dagger','weapon:knight-sword','weapon:one-hand','weapon:shield'],armorTags:['armor:light','armor:medium'],weaknesses:['fire','holy'],healingRule:'potions-self-only',advanced:true,model:'Assassin',skills};
+ JOBS.Nightbound=info;JOB_NAMES.push('Nightbound');if(typeof ADVANCED_JOB_INFO!=='undefined')ADVANCED_JOB_INFO.Nightbound=info;if(typeof EQUIP_JOB_RULES!=='undefined')EQUIP_JOB_RULES.Nightbound={weapons:[...info.weapons],armor:[...info.armorTags]};
  for(const h of heroes){ensureJobData(h);if(!h.unlockedJobs.includes('Nightbound'))h.unlockedJobs.push('Nightbound')}
  save?.();
 }
 if(state.completed)installNightbound();
+const nightboundEquipmentRule=equipmentRuleError;equipmentRuleError=function(hero,item,slot){if((hero?.currentJob||hero?.cls)==='Nightbound'&&itemEquipTags(item).includes('weapon:shield')){if(slot!=='offHand'||!shieldCompatible(hero,gearItem(hero.equipment?.mainHand)))return'Nightbound shields belong in the off hand beside a one-handed weapon.';return''}return nightboundEquipmentRule(hero,item,slot)};
+const nightboundIncomingDamage=tankDamage;tankDamage=function(unit,h,foe,base,guarded){const hit=nightboundIncomingDamage(unit,h,foe,base,guarded),element=String(foe?.damageElement||foe?.attackElement||foe?.element||'').toLowerCase();if(h?.currentJob==='Nightbound'&&/(fire|holy|radiant)/.test(element)){const extra=Math.max(1,Math.ceil(hit.damage*.25));return{...hit,damage:hit.damage+extra,mitigation:Math.max(0,(hit.mitigation||0)-extra)}}return hit};
 
 const profiles={
  veil_thrall:{name:'Veil Thrall',race:'Vampire',family:'Bloodbound',dungeon:DUNGEON_ID,role:'skirmisher',sprite:70,range:1,move:4,armor:2,resistance:2,description:'A newly turned hunter driven by borrowed hunger.',ability:'Ravenous Lunge',behavior:'Flanks wounded targets and retreats from guarded defenders.',habitat:'The Veilwake crypt',elements:'Physical · Shadow',weakness:'Radiant magic',threat:'Standard'},
