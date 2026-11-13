@@ -1,7 +1,7 @@
 /* Final recovery authority: save reset and release diagnostics. */
 (function installRecoveryV4(global){
 'use strict';
-const VERSION='0.11.4-authored-tilesets';
+const VERSION='0.11.6-hq-battlefields';
 function gameKey(key){return typeof key==='string'&&(key.startsWith('wayfarer-')||key==='guild-sfx')}
 function clearGameStorage(){
  const removed=[];

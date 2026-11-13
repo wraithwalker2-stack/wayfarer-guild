@@ -3,7 +3,7 @@
 
   const RELEASE = Object.freeze({
     name: 'Wayfarer Guild',
-    version: '0.11.4-authored-tilesets',
+    version: '0.11.6-hq-battlefields',
     saveFormat: 1
   });
   const SAVE_PREFIXES = ['wayfarer-', 'guild-sfx'];
