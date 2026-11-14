@@ -102,3 +102,4 @@
 .sprite-fungal{background-position:33.333% 100%;}
 .sprite-rat{background-position:66.666% 100%;}
 .sprite-slime{background-position:100% 100%;}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy .unit-token{background-image:url('./assets/battle-v2/sprites/combat-sprite-atlas-v1.png');background-repeat:no-repeat;background-size:400% 200%;background-color:transparent;}
