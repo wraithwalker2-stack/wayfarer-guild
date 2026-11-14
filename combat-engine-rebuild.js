@@ -3,7 +3,6 @@
    proprietary Final Fantasy Tactics code or assets. */
 (function () {
   'use strict';
-  try { document.documentElement.dataset.wayfarerCombatEngine = 'loaded'; } catch (_) {}
 
   const W = 21, H = 21, STEP_X = 28, STEP_Y = 18;
   const key = (x, y) => `${x},${y}`;
@@ -108,6 +107,5 @@
   window.enemyRouteToAdjacent = (foe, target, b) => findPath(b || getRun()?.battle, foe, target, 99);
   window.fieldLineOfSight = (a, z, b) => { const steps = Math.max(Math.abs(z.x - a.x), Math.abs(z.y - a.y)); for (let i = 1; i < steps; i++) { const t = i / steps, x = Math.round(a.x + (z.x - a.x) * t), y = Math.round(a.y + (z.y - a.y) * t), c = cellAt(b || getRun()?.battle, x, y); if (!c?.walkable || c.kind === 'deep-water') return false; } return true; };
   window.WayfarerCombatRebuild = Object.freeze({ version: '1.0.0', boardSize: [W, H], legalCells(b = getRun()?.battle) { return b ? [...b.board.cells.values()].filter(c => c.walkable).length : 0; }, scene: sceneOf });
-  try { document.documentElement.dataset.wayfarerCombatEngine = 'ready'; } catch (_) {}
   try { const r = getRun(); if (r?.battle) { normalizeDeployment(r.battle); render(); } } catch (_) {}
 })();
