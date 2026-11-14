@@ -1,0 +1,66 @@
+/* Single combat shell: the old expedition/status panels are not part of an active battle. */
+.cutover-hidden{display:none !important}
+#run.cutover-run{
+  margin-top:16px;
+  padding:0;
+  overflow:visible;
+  background:#0b1114;
+  border:1px solid #4b5a5f;
+  border-radius:14px;
+  color:#f5f0de;
+}
+#run.cutover-run .cutover-route,
+#run.cutover-run .cutover-result{
+  padding:20px;
+}
+#run.cutover-run .cutover-route-head,
+#run.cutover-run .cutover-battle-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid #33464b;
+}
+#run.cutover-run .cutover-route-head strong,
+#run.cutover-run .cutover-battle-head strong{
+  color:#ffe7a7;
+  font:700 12px 'DM Mono',monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+#run.cutover-run .cutover-route-head small,
+#run.cutover-run .cutover-battle-head small{
+  color:#bcd0c6;
+  font:10px 'DM Mono',monospace;
+}
+#run.cutover-run .cutover-route-grid{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:6px;
+  margin:16px 0;
+}
+#run.cutover-run .cutover-route-node{
+  min-height:42px;
+  display:grid;
+  place-items:center;
+  border:1px solid #405056;
+  border-radius:7px;
+  background:#172329;
+  color:#8fa69d;
+  font:700 12px 'DM Mono',monospace;
+}
+#run.cutover-run .cutover-route-node.done{background:#25483d;color:#d8f6ab;border-color:#5f9e82}
+#run.cutover-run .cutover-route-node.current{background:#5f4b32;color:#ffe7a7;border-color:#e2b96c;box-shadow:0 0 0 2px #e2b96c44}
+#run.cutover-run .cutover-route-copy{color:#cfded2;font-size:12px;line-height:1.55;margin:0 0 12px}
+#run.cutover-run .cutover-route-actions{display:flex;gap:8px;flex-wrap:wrap}
+#run.cutover-run .cutover-result h3{margin:0 0 8px;font:700 16px 'DM Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#ffe7a7}
+#run.cutover-run .cutover-result p{color:#cfded2;font-size:12px;line-height:1.55}
+#run.cutover-run .cutover-battle-shell{padding:0}
+#run.cutover-run .cutover-battle-head{padding:14px 20px;background:#111a1e}
+#run.cutover-run .cutover-battle-head .cutover-scene{color:#cfe1d4;font:11px 'DM Mono',monospace}
+#run.cutover-run #battlePanel.rebuilt-combat{border:0;border-radius:0;box-shadow:none}
+@media(max-width:760px){
+  #run.cutover-run .cutover-route-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #run.cutover-run .cutover-route-head,#run.cutover-run .cutover-battle-head{align-items:flex-start;flex-direction:column}
+}

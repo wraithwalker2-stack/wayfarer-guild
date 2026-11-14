@@ -1,7 +1,7 @@
 /* Final recovery authority: save reset and release diagnostics. */
 (function installRecoveryV4(global){
 'use strict';
-const VERSION='0.13.0-combat-reset';
+const VERSION='1.1.0-combat-cutover';
 function gameKey(key){return typeof key==='string'&&(key.startsWith('wayfarer-')||key==='guild-sfx')}
 function clearGameStorage(){
  const removed=[];
@@ -10,7 +10,7 @@ function clearGameStorage(){
  try{sessionStorage.removeItem('wayfarer-last-error')}catch{}
  return removed;
 }
-function freshUrl(){const url=new URL(global.location.href);url.search='';url.searchParams.set('build','v0130-combat-reset');url.searchParams.set('fresh',Date.now().toString(36));return url.href}
+function freshUrl(){const url=new URL(global.location.href);url.search='';url.searchParams.set('build','v1-1-0-combat-cutover');url.searchParams.set('fresh',Date.now().toString(36));return url.href}
 function resetGameData({reload=true,confirm=true}={}){
  if(confirm&&!global.confirm('Start a completely new game? This permanently clears the guild, founder, characters, contracts, jobs, equipment, Codex discoveries, retainers, settings, and campaign progress on this device.'))return false;
  const removed=clearGameStorage();

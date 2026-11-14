@@ -1,7 +1,6 @@
 /* Deployment interaction bridge.
-   The authored combat board can be re-rendered by the legacy expedition shell,
-   so placement controls are handled at document capture level rather than on
-   a transient battlePanel element. */
+   The cutover board owns the live battle panel. This bridge only reconnects
+   the board's placement/action controls after an authored render. */
 (function () {
   'use strict';
 
@@ -12,7 +11,6 @@
   function refreshBoard() {
     try {
       if (typeof window.renderBattle === 'function') return window.renderBattle();
-      if (typeof window.renderRun === 'function') return window.renderRun();
     } catch (_) {}
   }
 

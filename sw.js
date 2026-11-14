@@ -1,4 +1,4 @@
-const CACHE='wayfarer-public-alpha-0.13.0-combat-reset-11';
+const CACHE='wayfarer-public-alpha-1.1.0-combat-cutover-1';
 const SHELL=[
   './','./index.html','./wayfarer-core.js','./wayfarer-engine-v3.js','./wayfarer-runtime-v3.js','./wayfarer-recovery-v4.js',
   './chapter-one-release.css','./public-alpha.js','./runtime-stability.js','./music-system.js',
@@ -9,7 +9,7 @@ const SHELL=[
   './assets/battle-v2/scenes/greenway.png','./assets/battle-v2/scenes/mosslight.png','./assets/battle-v2/scenes/ashen.png',
   './assets/battle-v2/scenes/sepulcher.png','./assets/battle-v2/scenes/southgate.png','./assets/battle-v2/scenes/veilwake.png',
   './assets/battle-v2/scenes/sewer-stage-1.png','./assets/battle-v2/scenes/sewer-stage-2.png','./assets/battle-v2/scenes/sewer-stage-3.png',
-  './assets/battle-v2/sprites/combat-sprite-atlas-v1.png','./deployment-bridge.js'
+  './assets/battle-v2/sprites/combat-sprite-atlas-v1.png','./deployment-bridge.js','./combat-cutover.css','./combat-cutover.js'
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('wayfarer-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
