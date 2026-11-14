@@ -64,6 +64,9 @@
   function log(text) { const r = getRun(); if (r) r.log = text; try { if (typeof recordBattleLog === 'function') recordBattleLog(text); } catch (_) {} }
   function refresh() {
     try {
+      // The expedition shell owns the #battlePanel container. Render that
+      // shell first, then let the authored engine paint over it.
+      if (typeof window.renderRun === 'function') window.renderRun();
       if (typeof window.renderBattle === 'function') return window.renderBattle();
       if (typeof renderRun === 'function') return renderRun();
     } catch (_) {
