@@ -55,3 +55,50 @@
 #battlePanel.rebuilt-combat .rebuild-deployment{padding:10px 12px;border-top:1px solid #33464b;background:#111b1f;font:11px 'DM Mono',monospace;color:#d7e9db}
 #battlePanel.rebuilt-combat .rebuild-deployment strong{color:#ffe7a7}
 @media(max-width:1000px){#battlePanel.rebuilt-combat .rebuild-main{grid-template-columns:1fr}#battlePanel.rebuilt-combat .rebuild-sidebar{min-height:0;max-height:290px}}
+
+/* v1.0.5: the combat board is an original authored tactics field, not a
+   painted backdrop.  Unit art is supplied by the transparent sprite atlas. */
+#battlePanel.rebuilt-combat .rebuild-board{
+  background-image:none !important;
+  background-color:#111b1d;
+  background-size:auto;
+}
+#battlePanel.rebuilt-combat .rebuild-board:after{background:linear-gradient(115deg,#ffffff08,transparent 34% 70%,#00000024);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-floor{background:linear-gradient(145deg,#7a8f68,#405541 56%,#24372d);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-floor:nth-child(4n){background:linear-gradient(145deg,#889d72,#496149 56%,#293c30);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-floor:nth-child(7n){background:linear-gradient(145deg,#6c8460,#384f3c 56%,#1e3027);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-floor:nth-child(11n){background:linear-gradient(145deg,#92a979,#4b654d 56%,#2b4131);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-grass:nth-child(5n){filter:saturate(1.12) brightness(1.04);}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-deployment{box-shadow:inset 0 0 0 2px #8de6c3aa,0 4px 0 #07100a99;}
+#battlePanel.rebuilt-combat .rebuild-cell.cell-move{box-shadow:inset 0 0 0 2px #d8f6abcc,0 0 16px #84f3c777,0 4px 0 #07100a99;}
+
+/* Character/enemy bodies are image sprites, so the old CSS silhouettes and
+   emoji placeholders can never bleed through the board again. */
+#battlePanel.rebuilt-combat .rebuild-unit{width:76px;height:88px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible;display:block;}
+#battlePanel.rebuilt-combat .rebuild-unit:before{display:none;}
+#battlePanel.rebuilt-combat .rebuild-unit:after{bottom:-2px;width:42px;height:8px;background:#0008;filter:blur(3px);}
+#battlePanel.rebuilt-combat .rebuild-unit.enemy{background:transparent;border:0;}
+#battlePanel.rebuilt-combat .rebuild-unit.enemy:before{display:none;}
+#battlePanel.rebuilt-combat .rebuild-unit.boss{width:104px;height:116px;border:0;background:transparent;}
+#battlePanel.rebuilt-combat .rebuild-unit .unit-mark{display:none;}
+#battlePanel.rebuilt-combat .unit-sprite,
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-token{
+  display:block;
+  background-image:url('./assets/battle-v2/sprites/combat-sprite-atlas-v1.png');
+  background-repeat:no-repeat;
+  background-size:400% 200%;
+  image-rendering:auto;
+  filter:drop-shadow(0 5px 4px #0008);
+}
+#battlePanel.rebuilt-combat .unit-sprite{position:absolute;left:50%;top:50%;width:76px;height:88px;transform:translate(-50%,-58%);}
+#battlePanel.rebuilt-combat .rebuild-unit.boss .unit-sprite{width:106px;height:116px;transform:translate(-50%,-56%);}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-token{width:34px;height:38px;border:0;border-radius:0;flex:0 0 auto;background-color:transparent;}
+#battlePanel.rebuilt-combat .rebuild-sidebar .unit-card.enemy .unit-token{border:0;background-color:transparent;}
+.sprite-squire{background-position:0% 0%;}
+.sprite-alchemist{background-position:33.333% 0%;}
+.sprite-rogue{background-position:66.666% 0%;}
+.sprite-wizard{background-position:100% 0%;}
+.sprite-wolf{background-position:0% 100%;}
+.sprite-fungal{background-position:33.333% 100%;}
+.sprite-rat{background-position:66.666% 100%;}
+.sprite-slime{background-position:100% 100%;}
