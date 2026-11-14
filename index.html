@@ -25,6 +25,7 @@ const heroes=[
 const rooms=[{id:'tavern',name:'The Hearth & Hound',icon:'🍲',desc:'A warm meal restores a little vigor.',bonus:'+1 daily morale',staff:null},{id:'forge',name:'Copperpot Forge',icon:'⚒️',desc:'Turn scrap into useful kit.',bonus:'+1 gear scrap / day',staff:null}];
 const jobs=[{id:'herbs',icon:'🌿',name:'Gather moonwort',desc:'A village healer needs herbs before the next rain.',time:35,gold:48,xp:16,item:'Moonwort bundle'},{id:'lost',icon:'🐑',name:'The lost lamb',desc:'Track a curious lamb into the nearby foothills.',time:50,gold:62,xp:22,item:'Wool charm'},{id:'caravan',icon:'🛒',name:'Guard a supply cart',desc:'Walk a merchant’s cart safely to the next village.',time:65,gold:84,xp:28,item:'Iron scraps'}];
 let gold=420,renown=3,activeJobs=[],runState=null,jobTimer=null,pendingJob=null,detailHero=null,selectedDungeon='mosslight';
+Object.defineProperties(window,{runState:{configurable:true,get:()=>runState,set:value=>{runState=value}},heroes:{configurable:true,get:()=>heroes}});
 const classPaths={Squire:['Fighter','Tank'],Rogue:['Thief','Archer'],Scholar:['Wizard','Summoner'],Alchemist:['Cleric','Witch']};
 function classIcon(cls){return ({Squire:'🛡️',Fighter:'⚔️',Tank:'🏰',Rogue:'🗡️',Thief:'🗝️',Archer:'🏹',Scholar:'📚',Wizard:'🪄',Summoner:'🔮',Alchemist:'⚗️',Cleric:'✨',Witch:'🧙‍♀️'})[cls]||'✦'}
 const backgroundClass={'Shepherd':'Squire','Caravan guard':'Squire','Street performer':'Rogue','Forester':'Scholar','Apothecary':'Alchemist','Blacksmith':'Alchemist'};
